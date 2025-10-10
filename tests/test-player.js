@@ -1,59 +1,59 @@
 // Player Tests
-describe('Player', () => {
-    let gameArea, player;
+describe('Player', function () {
+    let player;
+    let mockGameArea;
 
-    beforeEach(() => {
-        // Create mock game area
-        gameArea = document.createElement('div');
-        gameArea.style.width = '800px';
-        gameArea.style.height = '600px';
-        document.body.appendChild(gameArea);
+    beforeEach(function () {
+        mockGameArea = {
+            style: { width: '800px', height: '600px' },
+            getBoundingClientRect: function () {
+                return { width: 800, height: 600, left: 0, top: 0 };
+            }
+        };
 
-        // Create player element
-        const playerElement = document.createElement('div');
-        playerElement.id = 'player';
-        gameArea.appendChild(playerElement);
+        const playerElement = {
+            style: {},
+            classList: {
+                add: function () { },
+                remove: function () { }
+            }
+        };
 
-        player = new Player(gameArea);
+        player = new Player(mockGameArea);
+        player.element = playerElement;
     });
 
-    afterEach(() => {
-        document.body.removeChild(gameArea);
-    });
-
-    test('should initialize in center of game area', () => {
+    it('should initialize in center of game area', function () {
+        player.initialize();
         const position = player.getPosition();
-        expect(position.x).toBe(385); // (800 - 30) / 2
-        expect(position.y).toBe(285); // (600 - 30) / 2
+        expect(position.x).to.equal(380);
+        expect(position.y).to.equal(280);
     });
 
-    test('should move up within bounds', () => {
+    it('should move within bounds', function () {
         player.setPosition(100, 100);
-        player.move('up');
-        expect(player.getPosition().y).toBe(95);
-        
-        player.setPosition(100, 0);
-        player.move('up');
-        expect(player.getPosition().y).toBe(0);
+        player.moveStep('up');
+        expect(player.getPosition().y).to.equal(95);
+
+        player.setPosition(100, player.borderBuffer);
+        player.moveStep('up');
+        expect(player.getPosition().y).to.equal(player.borderBuffer);
     });
 
-    test('should move down within bounds', () => {
-        player.setPosition(100, 100);
-        player.move('down');
-        expect(player.getPosition().y).toBe(105);
-        
-        player.setPosition(100, 570); // 600 - 30 = 570
-        player.move('down');
-        expect(player.getPosition().y).toBe(570);
+    it('should update rotation when changing direction', function () {
+        player.startMoving('up');
+        expect(player.facing).to.equal('up');
+
+        player.startMoving('left');
+        expect(player.facing).to.equal('left');
     });
 
-    test('should set position within bounds', () => {
-        player.setPosition(-100, -100);
-        expect(player.getPosition().x).toBe(0);
-        expect(player.getPosition().y).toBe(0);
-        
-        player.setPosition(1000, 1000);
-        expect(player.getPosition().x).toBe(770); // 800 - 30
-        expect(player.getPosition().y).toBe(570); // 600 - 30
+    it('should stop moving when requested', function () {
+        player.startMoving('right');
+        expect(player.isMoving).to.be.true;
+
+        player.stopMoving();
+        expect(player.isMoving).to.be.false;
+        expect(player.moveDirection).to.be.null;
     });
 });

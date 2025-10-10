@@ -1,34 +1,405 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Star Eater - Retro Arkadna Igra u kojoj preživljavaš i jedeš zvjezdice" />
+    <meta name="description"
+        content="Test Suite for running automated tests and checklist to help tracking manual tests for Star Eater Retro game" />
     <meta name="author" content="Lem Treursić" />
-    <title>Star Eater Game Tests</title>
+    <title>Star Eater Retro game - Test Suite</title>
+
     <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.css" />
+    <link rel="stylesheet" href="../css/test-runner.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 </head>
+
 <body>
+    <h1><i class="fa-solid fa-rocket"></i> Star Eater - Test Suite</h1>
+
+    <div class="test-controls">
+        <button id="run-all-tests"><i class="fa-solid fa-play"></i> Run All Tests</button>
+        <button id="run-selected-tests"><i class="fa-solid fa-filter"></i> Run Selected Tests</button>
+        <button id="clear-tests"><i class="fa-solid fa-broom"></i> Clear Results</button>
+        <button id="select-all"><i class="fa-solid fa-square-check"></i> Select All</button>
+        <button id="deselect-all"><i class="fa-regular fa-square"></i> Select None</button>
+    </div>
+
+    <div class="test-section">
+        <h3><i class="fa-solid fa-flask"></i> Automated Tests</h3>
+        <div class="test-checkboxes" id="automated-tests">
+            <!-- Automated tests will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <div class="test-section manual-checklist">
+        <h3><i class="fa-solid fa-user-check"></i> Manual Tests</h3>
+        <div id="manual-tests">
+            <!-- Manual tests will be populated by JavaScript -->
+        </div>
+    </div>
+
     <div id="mocha"></div>
 
-    <script src="https://unpkg.com/mocha/mocha.js"></script>
-    <script src="https://unpkg.com/chai/chai.js"></script>
-    <script src="https://unpkg.com/sinon/pkg/sinon.js"></script>
+    <div id="status" class="status"></div>
 
-    <script>mocha.setup('bdd')</script>
-
-    <!-- Include your test files -->
-    <script src="test-storage.js"></script>
-    <script src="test-player.js"></script>
-    <script src="test-hud.js"></script>
-    <script src="test-game.js"></script>
-
+    <!-- Load testing libraries with multiple CDN fallbacks -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.js"></script>
     <script>
-        mocha.run();
+        // Load Chai with fallback
+        function loadChai() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.7/chai.min.js';
+                script.onload = resolve;
+                script.onerror = () => {
+                    console.warn('Primary Chai CDN failed, trying unpkg...');
+                    const fallbackScript = document.createElement('script');
+                    fallbackScript.src = 'https://unpkg.com/chai@4.3.7/chai.js';
+                    fallbackScript.onload = resolve;
+                    fallbackScript.onerror = () => {
+                        console.error('All Chai CDNs failed');
+                        reject(new Error('Could not load Chai'));
+                    };
+                    document.head.appendChild(fallbackScript);
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load Sinon with fallback
+        function loadSinon() {
+            return new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/sinon.js/15.2.0/sinon.min.js';
+                script.onload = resolve;
+                script.onerror = () => {
+                    console.warn('Sinon failed to load, continuing without it...');
+                    resolve(); // Sinon is optional
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load all dependencies
+        Promise.all([
+            loadChai(),
+            loadSinon()
+        ]).then(() => {
+            console.log('All dependencies loaded, initializing...');
+            initializeTestEnvironment();
+        }).catch(error => {
+            console.error('Failed to load dependencies:', error);
+            document.getElementById('status').innerHTML =
+                'Error: Failed to load testing libraries. Check console for details. <i class="fa-solid fa-triangle-exclamation"></i>';
+        });
+    </script>
+
+    <script src="test-mocks.js"></script>
+
+    <!-- Test Configuration -->
+    <script>
+        function initializeTestEnvironment() {
+            console.log('Initializing test environment...');
+
+            // Check if all required libraries are loaded
+            if (typeof mocha === 'undefined') {
+                console.error('❌ Mocha not loaded');
+                document.getElementById('status').textContent = 'Error: Mocha testing library failed to load';
+                return;
+            }
+
+            if (typeof chai === 'undefined') {
+                console.error('❌ Chai not loaded');
+                document.getElementById('status').textContent = 'Error: Chai assertion library failed to load';
+                return;
+            }
+
+            console.log('✅ Mocha version:', mocha.version);
+            console.log('✅ Chai version:', chai.version);
+
+            if (typeof sinon === 'undefined') {
+                console.warn('⚠️ Sinon not loaded, but continuing...');
+            } else {
+                console.log('✅ Sinon version:', sinon.version);
+            }
+
+            // Configure Mocha
+            mocha.setup({
+                ui: 'bdd',
+                timeout: 5000,
+                reporter: 'html',
+                color: false
+            });
+
+            // Configure Chai
+            window.expect = chai.expect;
+            window.assert = chai.assert;
+            window.should = chai.should();
+
+            console.log('✅ Test environment initialized successfully');
+
+            // Initialize test manager
+            window.testManager = new TestManager();
+        }
+    </script>
+
+    <!-- Test Manager Script -->
+    <script>
+        // Test Utilities
+        class TestManager {
+            constructor() {
+                console.log('Initializing TestManager...');
+
+                this.tests = {
+                    automated: [
+                        { id: 'collectables', name: 'Collectables Manager', file: 'test-collectables.js', enabled: true },
+                        { id: 'player', name: 'Player Movement', file: 'test-player.js', enabled: true },
+                        { id: 'effects', name: 'Effects Manager', file: 'test-effects.js', enabled: true },
+                        { id: 'game', name: 'Game Logic', file: 'test-game.js', enabled: true }
+                    ],
+                    manual: [
+                        { id: 'ui-retro', name: 'Retro UI displays correctly', checked: false },
+                        { id: 'player-movement', name: 'Player moves with WASD/arrows', checked: false },
+                        { id: 'player-rotation', name: 'Player rotates correctly', checked: false },
+                        { id: 'star-collection', name: 'Stars can be collected', checked: false },
+                        { id: 'safe-spawning', name: 'Stars spawn safely away from borders/player', checked: false },
+                        { id: 'border-collision', name: 'Border collisions work with bounce effect', checked: false },
+                        { id: 'sound-effects', name: 'Sound effects play correctly', checked: false },
+                        { id: 'level-progression', name: 'Level progression works', checked: false },
+                        { id: 'mobile-controls', name: 'Mobile controls work on small screens', checked: false },
+                        { id: 'pause-functionality', name: 'Pause stops all movement and sounds', checked: false },
+                        { id: 'highscore-saving', name: 'Highscores save and display correctly', checked: false },
+                        { id: 'modals-work', name: 'All modals open and close properly', checked: false }
+                    ]
+                };
+
+                this.init();
+            }
+
+            init() {
+                console.log('Setting up TestManager UI...');
+                this.renderAutomatedTests();
+                this.renderManualTests();
+                this.bindEvents();
+                this.updateStatus('Ready to run tests <i class="fa-solid fa-check"></i>', 'ready');
+            }
+
+            renderAutomatedTests() {
+                const container = document.getElementById('automated-tests');
+                if (!container) {
+                    console.error('Automated tests container not found');
+                    return;
+                }
+
+                container.innerHTML = this.tests.automated.map(test => `
+                    <div class="test-checkbox">
+                        <input type="checkbox" id="${test.id}" ${test.enabled ? 'checked' : ''}>
+                        <label for="${test.id}">${test.name}</label>
+                    </div>
+                `).join('');
+
+                console.log('Automated tests rendered');
+            }
+
+            renderManualTests() {
+                const container = document.getElementById('manual-tests');
+                if (!container) {
+                    console.error('Manual tests container not found');
+                    return;
+                }
+
+                container.innerHTML = this.tests.manual.map(test => `
+                    <div class="manual-test ${test.checked ? 'done' : ''}">
+                        <input type="checkbox" id="manual-${test.id}" ${test.checked ? 'checked' : ''}>
+                        <label for="manual-${test.id}">${test.name}</label>
+                    </div>
+                `).join('');
+
+                // Add change listeners for manual tests
+                this.tests.manual.forEach(test => {
+                    const checkbox = document.getElementById(`manual-${test.id}`);
+                    if (checkbox) {
+                        checkbox.addEventListener('change', (e) => {
+                            test.checked = e.target.checked;
+                            this.renderManualTests();
+                        });
+                    }
+                });
+
+                console.log('Manual tests rendered');
+            }
+
+            bindEvents() {
+                console.log('Binding event listeners...');
+
+                const runAllBtn = document.getElementById('run-all-tests');
+                const runSelectedBtn = document.getElementById('run-selected-tests');
+                const clearBtn = document.getElementById('clear-tests');
+                const selectAllBtn = document.getElementById('select-all');
+                const deselectAllBtn = document.getElementById('deselect-all');
+
+                if (runAllBtn) {
+                    runAllBtn.addEventListener('click', () => this.runAllTests());
+                    console.log('Run All button bound');
+                }
+                if (runSelectedBtn) {
+                    runSelectedBtn.addEventListener('click', () => this.runSelectedTests());
+                    console.log('Run Selected button bound');
+                }
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearTests());
+                    console.log('Clear button bound');
+                }
+                if (selectAllBtn) {
+                    selectAllBtn.addEventListener('click', () => this.selectAllTests());
+                    console.log('Select All button bound');
+                }
+                if (deselectAllBtn) {
+                    deselectAllBtn.addEventListener('click', () => this.deselectAllTests());
+                    console.log('Deselect All button bound');
+                }
+            }
+
+            getSelectedTests() {
+                return this.tests.automated.filter(test => {
+                    const checkbox = document.getElementById(test.id);
+                    return checkbox ? checkbox.checked : false;
+                });
+            }
+
+            async runSelectedTests() {
+                const selectedTests = this.getSelectedTests();
+                if (selectedTests.length === 0) {
+                    this.updateStatus('Please select at least one test to run <i class="fa-solid fa-triangle-exclamation"></i>', 'failed');
+                    return;
+                }
+
+                this.updateStatus('Running selected tests... <i class="fa-solid fa-spinner fa-spin"></i>', 'running');
+                await this.runTests(selectedTests);
+            }
+
+            async runAllTests() {
+                this.updateStatus('Running all tests... <i class="fa-solid fa-spinner fa-spin"></i>', 'running');
+                await this.runTests(this.tests.automated);
+            }
+
+            async runTests(testsToRun) {
+                // Clear previous results
+                const mochaReport = document.getElementById('mocha-report');
+                if (mochaReport) mochaReport.remove();
+
+                // Reset Mocha
+                if (mocha.suite) {
+                    mocha.suite.suites = [];
+                }
+
+                try {
+                    // Load and run each test file
+                    for (const test of testsToRun) {
+                        await this.loadTestFile(test.file);
+                    }
+
+                    // Run Mocha
+                    const runner = mocha.run();
+
+                    runner.on('end', () => {
+                        const passed = runner.stats.passes;
+                        const failed = runner.stats.failures;
+                        const total = runner.stats.tests;
+
+                        if (failed === 0) {
+                            this.updateStatus(`All tests passed! ${passed}/${total} tests successful <i class="fa-solid fa-check"></i>`, 'passed');
+                        } else {
+                            this.updateStatus(`Tests completed with ${failed} failure(s). ${passed}/${total} tests passed <i class="fa-solid fa-xmark"></i>`, 'failed');
+                        }
+                    });
+
+                } catch (error) {
+                    this.updateStatus(`Error running tests: ${error.message} <i class="fa-solid fa-xmark"></i>`, 'failed');
+                    console.error('Test error:', error);
+                }
+            }
+
+            loadTestFile(filename) {
+                return new Promise((resolve, reject) => {
+                    console.log(`Loading test file: ${filename}`);
+
+                    // Check if file exists first
+                    fetch(filename)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`File ${filename} not found (${response.status})`);
+                            }
+                            return response.text();
+                        })
+                        .then(content => {
+                            if (content.trim() === '') {
+                                throw new Error(`File ${filename} is empty`);
+                            }
+
+                            const script = document.createElement('script');
+                            script.src = filename;
+                            script.onload = () => {
+                                console.log(`✅ Successfully loaded ${filename}`);
+                                resolve();
+                            };
+                            script.onerror = (error) => {
+                                console.error(`❌ Failed to load ${filename}:`, error);
+                                reject(new Error(`Failed to load ${filename}`));
+                            };
+                            document.body.appendChild(script);
+                        })
+                        .catch(error => {
+                            console.error(`❌ Error fetching ${filename}:`, error);
+                            reject(error);
+                        });
+                });
+            }
+
+            clearTests() {
+                const mochaReport = document.getElementById('mocha-report');
+                if (mochaReport) mochaReport.remove();
+                this.updateStatus('Test results cleared <i class="fa-solid fa-broom"></i>', 'ready');
+            }
+
+            selectAllTests() {
+                this.tests.automated.forEach(test => {
+                    const checkbox = document.getElementById(test.id);
+                    if (checkbox) checkbox.checked = true;
+                });
+                console.log('All tests selected');
+            }
+
+            deselectAllTests() {
+                this.tests.automated.forEach(test => {
+                    const checkbox = document.getElementById(test.id);
+                    if (checkbox) checkbox.checked = false;
+                });
+                console.log('All tests deselected');
+            }
+
+            updateStatus(message, type = 'ready') {
+                const status = document.getElementById('status');
+                if (status) {
+                    status.innerHTML = message;
+                    status.className = `status ${type}`;
+                }
+            }
+
+            getManualProgress() {
+                const completed = this.tests.manual.filter(test => test.checked).length;
+                const total = this.tests.manual.length;
+                return { completed, total };
+            }
+        }
+
+        console.log('TestManager class defined');
     </script>
 </body>
+
 </html>

@@ -3,10 +3,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background: rgba(22, 33, 62, 0.95);
-    border-bottom: 2px solid #4cc9f0;
-    backdrop-filter: blur(10px);
+    background: #000;
+    border-bottom: 4px solid #0f0;
     z-index: 100;
+    position: relative;
+    font-size: 0.7rem;
 }
 
 .hud-left,
@@ -22,64 +23,131 @@
 }
 
 .game-title {
-    color: #4cc9f0;
-    font-size: 1.5rem;
+    color: #0f0;
+    font-size: 1.2rem;
     margin: 0;
-    text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+    text-shadow: 0 0 10px #0f0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
 }
 
 .hud-item {
-    font-size: 0.9rem;
-    color: #fff;
-    font-weight: bold;
+    color: #0f0;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.hud-btn {
-    background: rgba(76, 201, 240, 0.2);
-    border: 1px solid #4cc9f0;
-    border-radius: 6px;
-    padding: 8px 12px;
+.hud-item i {
+    color: #0f0;
+    width: 16px;
+    text-align: center;
+}
+
+/* Icon buttons for HUD */
+.icon-btn {
+    background: #000;
+    border: 2px solid #0f0;
+    border-radius: 0;
+    padding: 8px;
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.3s;
-    color: #fff;
+    color: #0f0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.hud-btn:hover {
-    background: rgba(76, 201, 240, 0.4);
+.icon-btn:hover {
+    color: #0f0;
+    background: #001100;
+    box-shadow: 0 0 10px #0f0;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
 }
 
-.hud-btn:active {
+.icon-btn:active {
     transform: translateY(0);
+    background: #002200;
+}
+
+.icon-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.icon-btn:hover::before {
+    left: 100%;
+}
+
+/* Highscore Display */
+.highscore-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.highscore-btn {
+    background: transparent;
+    border: none;
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.highscore-btn:hover {
+    background: rgba(255, 215, 0, 0.1);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.highscore-btn i {
+    font-size: 1.3rem;
 }
 
 /* Mobile Controls */
 .mobile-controls {
     display: none;
     padding: 15px 10px;
-    background: rgba(22, 33, 62, 0.95);
-    border-top: 2px solid #4cc9f0;
-    backdrop-filter: blur(10px);
+    background: #000;
+    border-top: 4px solid #0f0;
     z-index: 100;
 }
 
 .control-row {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    margin-bottom: 10px;
+    gap: 15px;
 }
 
 .control-btn {
-    background: rgba(76, 201, 240, 0.2);
-    border: 2px solid #4cc9f0;
-    border-radius: 50%;
+    background: #000;
+    border: 2px solid #0f0;
+    border-radius: 0;
     width: 70px;
     height: 70px;
     font-size: 1.8rem;
-    color: #fff;
+    color: #0f0;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -87,12 +155,103 @@
     transition: all 0.2s;
     touch-action: manipulation;
     user-select: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .control-btn:active {
-    background: rgba(76, 201, 240, 0.6);
-    transform: scale(0.9);
-    box-shadow: 0 0 20px rgba(76, 201, 240, 0.5);
+    background: #001100;
+    transform: scale(0.95);
+    box-shadow: 0 0 20px #0f0;
+    color: #0f0;
+}
+
+.control-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+    transition: left 0.3s;
+}
+
+.control-btn:active::before {
+    left: 100%;
+}
+
+/* Modal improvements */
+.instructions {
+    text-align: left;
+    margin: 1.5rem 0;
+    font-size: 0.7rem;
+    line-height: 1.6;
+}
+
+.instructions p {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.instructions i {
+    color: #0f0;
+    width: 20px;
+}
+
+.highscores-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1.5rem 0;
+    border: 2px solid #0f0;
+    background: #000;
+}
+
+.highscore-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #0f0;
+    font-size: 0.7rem;
+    align-items: center;
+}
+
+.highscore-item:last-child {
+    border-bottom: none;
+}
+
+.highscore-item:nth-child(1) {
+    color: #ff0;
+    background: #111100;
+}
+
+.highscore-rank {
+    font-weight: normal;
+    width: 30px;
+    color: #0f0;
+}
+
+.highscore-score {
+    font-weight: normal;
+    color: #0f0;
+    width: 60px;
+    text-align: right;
+}
+
+.highscore-name {
+    flex: 1;
+    text-align: left;
+    padding: 0 15px;
+    color: #0f0;
+}
+
+.highscore-date {
+    color: #0a0;
+    font-size: 0.6rem;
+    width: 100px;
+    text-align: right;
 }
 
 /* Responsive Design */
@@ -101,6 +260,7 @@
         flex-direction: column;
         gap: 10px;
         padding: 8px;
+        font-size: 0.6rem;
     }
 
     .hud-left,
@@ -115,7 +275,8 @@
     }
 
     .game-title {
-        font-size: 1.2rem;
+        font-size: 1rem;
+        letter-spacing: 2px;
     }
 
     .mobile-controls {
@@ -123,27 +284,56 @@
     }
 
     .hud-item {
-        font-size: 0.8rem;
+        font-size: 0.6rem;
     }
 
-    .hud-btn {
-        padding: 6px 10px;
+    .icon-btn {
+        width: 35px;
+        height: 35px;
         font-size: 0.9rem;
     }
-}
 
-@media (max-width: 480px) {
+    .highscore-btn {
+        font-size: 1rem;
+        padding: 6px 12px;
+    }
+
     .control-btn {
         width: 60px;
         height: 60px;
         font-size: 1.5rem;
     }
 
-    .control-row {
-        gap: 15px;
+    .instructions {
+        font-size: 0.6rem;
     }
 
+    .highscore-item {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
     .hud-item {
-        font-size: 0.75rem;
+        font-size: 0.5rem;
+    }
+
+    .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+
+    .control-row {
+        gap: 10px;
+    }
+
+    .highscore-item {
+        font-size: 0.5rem;
+    }
+
+    .highscore-date {
+        font-size: 0.5rem;
+        width: 80px;
     }
 }

@@ -1,26 +1,58 @@
 .player {
     position: absolute;
-    width: 30px;
-    height: 30px;
-    background: #4cc9f0;
-    border-radius: 50%;
-    box-shadow:
-        0 0 10px #4cc9f0,
-        0 0 20px #4cc9f0,
-        0 0 30px rgba(76, 201, 240, 0.5);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s ease;
     z-index: 10;
 }
 
-.player.moving {
-    transform: scale(1.1);
-    box-shadow:
-        0 0 15px #4cc9f0,
-        0 0 30px #4cc9f0,
-        0 0 45px rgba(76, 201, 240, 0.7);
+.player i {
+    font-size: 2rem;
+    color: #4cc9f0;
+    transition: all 0.3s ease;
 }
 
-/* Player animations for future use */
+.player.moving i {
+    filter: brightness(1.2);
+}
+
+/* Rotation classes for different directions */
+.player.facing-right i {
+    transform: rotate(0deg);
+}
+
+.player.facing-up i {
+    transform: rotate(-90deg);
+}
+
+.player.facing-left i {
+    transform: rotate(180deg);
+}
+
+.player.facing-down i {
+    transform: rotate(90deg);
+}
+
+.player.moving.facing-right i {
+    transform: rotate(0deg) scale(1.1);
+}
+
+.player.moving.facing-up i {
+    transform: rotate(-90deg) scale(1.1);
+}
+
+.player.moving.facing-left i {
+    transform: rotate(180deg) scale(1.1);
+}
+
+.player.moving.facing-down i {
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* Player animations */
 @keyframes playerPulse {
     0% {
         transform: scale(1);
@@ -37,4 +69,23 @@
 
 .player.idle {
     animation: playerPulse 2s infinite ease-in-out;
+}
+
+/* Border collision effect */
+@keyframes borderBounce {
+    0% {
+        transform: translate(var(--bounce-x), var(--bounce-y)) scale(1);
+    }
+
+    50% {
+        transform: translate(var(--bounce-x), var(--bounce-y)) scale(0.9);
+    }
+
+    100% {
+        transform: translate(var(--bounce-x), var(--bounce-y)) scale(1);
+    }
+}
+
+.player.border-bounce {
+    animation: borderBounce 0.3s ease-out;
 }

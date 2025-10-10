@@ -7,6 +7,8 @@ export class Player {
         this.isMoving = false;
         this.moveDirection = null;
         this.moveInterval = null;
+        this.facing = 'right'; // default direction
+        this.borderBuffer = 2; // Buffer to prevent getting stuck
 
         this.initialize();
         this.bindEvents();
@@ -20,10 +22,11 @@ export class Player {
 
         // Center the player in the game area
         const areaRect = this.gameArea.getBoundingClientRect();
-        this.position.x = (areaRect.width - 30) / 2;
-        this.position.y = (areaRect.height - 30) / 2;
+        this.position.x = (areaRect.width - 40) / 2;
+        this.position.y = (areaRect.height - 40) / 2;
 
         this.updatePosition();
+        this.updateRotation();
     }
 
     bindEvents() {
@@ -31,38 +34,43 @@ export class Player {
         document.addEventListener('keydown', (e) => this.handleKeyDown(e));
         document.addEventListener('keyup', (e) => this.handleKeyUp(e));
 
-        // Mobile control events
+        // Mobile control events with passive listeners
         const controlBtns = document.querySelectorAll('.control-btn');
         controlBtns.forEach(btn => {
+            // Use passive: true for touch events to prevent warnings
             btn.addEventListener('mousedown', () => this.handleControlPress(btn.dataset.direction));
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 this.handleControlPress(btn.dataset.direction);
-            });
+            }, { passive: false }); // passive: false since we call preventDefault
 
             btn.addEventListener('mouseup', () => this.stopMoving());
             btn.addEventListener('mouseleave', () => this.stopMoving());
             btn.addEventListener('touchend', (e) => {
                 e.preventDefault();
                 this.stopMoving();
-            });
+            }, { passive: false });
             btn.addEventListener('touchcancel', (e) => {
                 e.preventDefault();
                 this.stopMoving();
-            });
+            }, { passive: false });
         });
 
-        // Prevent context menu on mobile controls
+        // Prevent context menu on mobile controls with passive listener
         const mobileControls = document.getElementById('mobile-controls');
         if (mobileControls) {
-            mobileControls.addEventListener('contextmenu', (e) => e.preventDefault());
+            mobileControls.addEventListener('contextmenu', (e) => e.preventDefault(), { passive: false });
         }
     }
 
     handleKeyDown(event) {
-        if (event.repeat) return;
+        // Check if game is paused before handling input
+        if (event.repeat || (window.game && window.game.state.isPaused)) return;
 
-        switch (event.key.toLowerCase()) {
+        const key = event.key?.toLowerCase();
+        if (!key) return;
+
+        switch (key) {
             case 'w':
             case 'arrowup':
                 this.startMoving('up');
@@ -83,7 +91,13 @@ export class Player {
     }
 
     handleKeyUp(event) {
-        switch (event.key.toLowerCase()) {
+        // Check if game is paused before handling input
+        if (window.game && window.game.state.isPaused) return;
+
+        const key = event.key?.toLowerCase();
+        if (!key) return;
+
+        switch (key) {
             case 'w':
             case 's':
             case 'a':
@@ -98,6 +112,8 @@ export class Player {
     }
 
     handleControlPress(direction) {
+        // Check if game is paused before handling input
+        if (window.game && window.game.state.isPaused) return;
         this.startMoving(direction);
     }
 
@@ -107,8 +123,10 @@ export class Player {
         this.stopMoving(); // Stop any existing movement
 
         this.moveDirection = direction;
+        this.facing = direction;
         this.isMoving = true;
         this.element.classList.add('moving');
+        this.updateRotation();
 
         // Continuous movement
         this.moveInterval = setInterval(() => {
@@ -118,23 +136,48 @@ export class Player {
 
     moveStep(direction) {
         const areaRect = this.gameArea.getBoundingClientRect();
+        let newX = this.position.x;
+        let newY = this.position.y;
+        let hitBorder = false;
 
         switch (direction) {
             case 'up':
-                this.position.y = Math.max(0, this.position.y - this.speed);
+                newY = Math.max(this.borderBuffer, this.position.y - this.speed);
+                if (newY === this.borderBuffer) hitBorder = true;
                 break;
             case 'down':
-                this.position.y = Math.min(areaRect.height - 30, this.position.y + this.speed);
+                newY = Math.min(areaRect.height - 40 - this.borderBuffer, this.position.y + this.speed);
+                if (newY === areaRect.height - 40 - this.borderBuffer) hitBorder = true;
                 break;
             case 'left':
-                this.position.x = Math.max(0, this.position.x - this.speed);
+                newX = Math.max(this.borderBuffer, this.position.x - this.speed);
+                if (newX === this.borderBuffer) hitBorder = true;
                 break;
             case 'right':
-                this.position.x = Math.min(areaRect.width - 30, this.position.x + this.speed);
+                newX = Math.min(areaRect.width - 40 - this.borderBuffer, this.position.x + this.speed);
+                if (newX === areaRect.width - 40 - this.borderBuffer) hitBorder = true;
                 break;
         }
 
+        this.position.x = newX;
+        this.position.y = newY;
         this.updatePosition();
+
+        // Handle border collision
+        if (hitBorder) {
+            this.handleBorderCollision();
+        }
+    }
+
+    handleBorderCollision() {
+        // Trigger border collision effects
+        document.dispatchEvent(new CustomEvent('borderCollision'));
+
+        // Visual bounce effect
+        this.element.classList.add('border-bounce');
+        setTimeout(() => {
+            this.element.classList.remove('border-bounce');
+        }, 300);
     }
 
     stopMoving() {
@@ -152,20 +195,37 @@ export class Player {
         this.element.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
     }
 
+    updateRotation() {
+        // Remove all direction classes
+        this.element.classList.remove('facing-up', 'facing-down', 'facing-left', 'facing-right');
+        // Add current direction class
+        this.element.classList.add(`facing-${this.facing}`);
+    }
+
     getPosition() {
         return { ...this.position };
     }
 
     setPosition(x, y) {
         const areaRect = this.gameArea.getBoundingClientRect();
-        this.position.x = Math.max(0, Math.min(areaRect.width - 30, x));
-        this.position.y = Math.max(0, Math.min(areaRect.height - 30, y));
+        this.position.x = Math.max(this.borderBuffer, Math.min(areaRect.width - 40 - this.borderBuffer, x));
+        this.position.y = Math.max(this.borderBuffer, Math.min(areaRect.height - 40 - this.borderBuffer, y));
         this.updatePosition();
     }
 
     reset() {
         this.initialize();
         this.stopMoving();
+    }
+
+    enableControls() {
+        // Controls are enabled by default through event listeners
+        console.log('Player controls enabled');
+    }
+
+    disableControls() {
+        this.stopMoving();
+        console.log('Player controls disabled');
     }
 
     // Clean up method to remove event listeners if needed

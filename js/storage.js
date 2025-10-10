@@ -42,15 +42,43 @@ export class StorageManager {
         return this.getItem('playerName', 'Guest');
     }
 
-    saveHighscore(score) {
+    saveHighscore(score, playerName = null) {
         const currentHighscore = this.getHighscore();
-        if (score > currentHighscore) {
-            return this.setItem('highscore', score);
+        if (score > currentHighscore.score) {
+            const highscoreData = {
+                score: score,
+                playerName: playerName || this.getPlayerName(),
+                date: new Date().toISOString()
+            };
+            this.setItem('highscore', highscoreData);
+            this.addToHighscoresList(highscoreData);
+            return true;
         }
         return false;
     }
 
     getHighscore() {
-        return this.getItem('highscore', 0);
+        return this.getItem('highscore', { score: 0, playerName: 'Guest', date: new Date().toISOString() });
+    }
+
+    addToHighscoresList(scoreData) {
+        const highscores = this.getHighscores();
+        highscores.push(scoreData);
+
+        // Sort by score descending and keep top 10
+        highscores.sort((a, b) => b.score - a.score);
+        const topScores = highscores.slice(0, 10);
+
+        this.setItem('highscores', topScores);
+        return topScores;
+    }
+
+    getHighscores() {
+        return this.getItem('highscores', []);
+    }
+
+    clearHighscores() {
+        this.removeItem('highscores');
+        this.removeItem('highscore');
     }
 }

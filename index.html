@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="hr">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Star Eater - Retro Arkadna Igra u kojoj preživljavaš i jedeš zvjezdice" />
+  <meta name="description"
+    content="Star Eater, a top-down arcade, evade, collect and survive game for desktop and mobile in retro 80's style" />
   <meta name="author" content="Lem Treursić" />
-  <title>Star Eater</title>
+  <title>Star Eater Retro game</title>
 
   <!-- favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <!-- Google Font for Retro Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <!-- CSS -->
   <link rel="stylesheet" href="./css/ui.css" />
@@ -29,55 +33,54 @@
   <script type="module" src="./js/game.js" defer></script>
 </head>
 
-<body>
-  <!-- HUD Area -->
-  <div id="hud" class="hud">
-    <div class="hud-left">
-      <div class="hud-item">
-        <i class="fa-solid fa-user-astronaut"></i>
-        <span id="player-name-display">Guest</span>
-      </div>
-      <div class="hud-item">
-        <i class="fa-solid fa-earth-africa"></i>
-        Level: <span id="level-display">1</span>
-      </div>
-      <div class="hud-item">
-        <i class="fa-solid fa-star"></i>
-        <span id="score-display">0</span>
-      </div>
-      <div class="hud-item">
-        <i class="fa-solid fa-shuttle-space"></i>
-        <span id="lives-display">3</span>
-      </div>
+<!-- HUD Area -->
+<div id="hud" class="hud">
+  <div class="hud-left">
+    <div class="hud-item">
+      <i class="fa-solid fa-user-astronaut"></i>
+      <span id="player-name-display">Guest</span>
     </div>
-
-    <div class="hud-center">
-      <h1 class="game-title">Star Eater</h1>
+    <div class="hud-item">
+      <i class="fa-solid fa-earth-africa"></i>
+      Level: <span id="level-display">1</span>
     </div>
-
-    <div class="hud-right">
-      <button id="mute-btn" class="hud-btn icon-btn" title="Sound">
-        <i class="fa-solid fa-volume-high"></i>
-      </button>
-      <button id="pause-btn" class="hud-btn icon-btn" title="Pause">
-        <i class="fa-solid fa-pause"></i>
-      </button>
-      <button id="restart-btn" class="hud-btn icon-btn" title="Restart">
-        <i class="fa-solid fa-rotate"></i>
-      </button>
-      <button id="info-btn" class="hud-btn icon-btn" title="Info">
-        <i class="fa-solid fa-info"></i>
-      </button>
+    <div class="hud-item">
+      <i class="fa-solid fa-star"></i>
+      <span id="score-display">0</span>
     </div>
-
-    <!-- Highscore Display -->
-    <div class="highscore-display">
-      <button id="highscore-btn" class="highscore-btn">
-        <i class="fa-solid fa-trophy"></i>
-        <span id="highscore-display">0</span>
-      </button>
+    <div class="hud-item">
+      <i class="fa-solid fa-shuttle-space"></i>
+      <span id="lives-display">3</span>
     </div>
   </div>
+
+  <div class="hud-center">
+    <h1 class="game-title">Star Eater</h1>
+  </div>
+
+  <div class="hud-right">
+    <button id="mute-btn" class="hud-btn icon-btn" title="Sound">
+      <i class="fa-solid fa-volume-high"></i>
+    </button>
+    <button id="pause-btn" class="hud-btn icon-btn" title="Pause">
+      <i class="fa-solid fa-pause"></i>
+    </button>
+    <button id="restart-btn" class="hud-btn icon-btn" title="Restart">
+      <i class="fa-solid fa-rotate"></i>
+    </button>
+    <button id="info-btn" class="hud-btn icon-btn" title="Info">
+      <i class="fa-solid fa-info"></i>
+    </button>
+  </div>
+
+  <!-- Highscore Display -->
+  <div class="highscore-display">
+    <button id="highscore-btn" class="highscore-btn">
+      <i class="fa-solid fa-trophy"></i>
+      <span id="highscore-display">0</span>
+    </button>
+  </div>
+</div>
 
   <!-- Game Area -->
   <div id="game-area" class="game-area">
