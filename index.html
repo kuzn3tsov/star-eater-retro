@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Star Eater - Retro Arkadna Igra u kojoj preživljavaš i jedeš zvjezdice" />
+  <meta name="author" content="Lem Treursić" />
+  <title>Star Eater</title>
+
+  <!-- favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/ui.css" />
+  <link rel="stylesheet" href="./css/player.css" />
+  <link rel="stylesheet" href="./css/hud.css" />
+  <link rel="stylesheet" href="./css/collectables.css" />
+  <link rel="stylesheet" href="./css/effects.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+  <!-- JS Modules -->
+  <script type="module" src="./js/storage.js" defer></script>
+  <script type="module" src="./js/ui.js" defer></script>
+  <script type="module" src="./js/hud.js" defer></script>
+  <script type="module" src="./js/player.js" defer></script>
+  <script type="module" src="./js/collectables.js" defer></script>
+  <script type="module" src="./js/effects.js" defer></script>
+  <script type="module" src="./js/game.js" defer></script>
+</head>
+
+<body>
+  <!-- HUD Area -->
+  <div id="hud" class="hud">
+    <div class="hud-left">
+      <div class="hud-item">
+        <i class="fa-solid fa-user-astronaut"></i>
+        <span id="player-name-display">Guest</span>
+      </div>
+      <div class="hud-item">
+        <i class="fa-solid fa-earth-africa"></i>
+        Level: <span id="level-display">1</span>
+      </div>
+      <div class="hud-item">
+        <i class="fa-solid fa-star"></i>
+        <span id="score-display">0</span>
+      </div>
+      <div class="hud-item">
+        <i class="fa-solid fa-shuttle-space"></i>
+        <span id="lives-display">3</span>
+      </div>
+    </div>
+
+    <div class="hud-center">
+      <h1 class="game-title">Star Eater</h1>
+    </div>
+
+    <div class="hud-right">
+      <button id="mute-btn" class="hud-btn icon-btn" title="Sound">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+      <button id="pause-btn" class="hud-btn icon-btn" title="Pause">
+        <i class="fa-solid fa-pause"></i>
+      </button>
+      <button id="restart-btn" class="hud-btn icon-btn" title="Restart">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+      <button id="info-btn" class="hud-btn icon-btn" title="Info">
+        <i class="fa-solid fa-info"></i>
+      </button>
+    </div>
+
+    <!-- Highscore Display -->
+    <div class="highscore-display">
+      <button id="highscore-btn" class="highscore-btn">
+        <i class="fa-solid fa-trophy"></i>
+        <span id="highscore-display">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="game-area" class="game-area">
+    <div id="player" class="player">
+      <i class="fa-solid fa-shuttle-space"></i>
+    </div>
+    <!-- Collectables will be added here dynamically -->
+  </div>
+
+  <!-- Mobile Controls -->
+  <div id="mobile-controls" class="mobile-controls">
+    <div class="control-row">
+      <button id="left-btn" class="control-btn" data-direction="left">
+        <i class="fa-solid fa-caret-left"></i>
+      </button>
+      <button id="up-btn" class="control-btn" data-direction="up">
+        <i class="fa-solid fa-caret-up"></i>
+      </button>
+      <button id="down-btn" class="control-btn" data-direction="down">
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <button id="right-btn" class="control-btn" data-direction="right">
+        <i class="fa-solid fa-caret-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Welcome Modal -->
+  <div id="welcome-modal" class="modal modal-active">
+    <div class="modal-content">
+      <h2>Star Eater</h2>
+      <div class="input-group">
+        <label for="player-name-input">Player Name:</label>
+        <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="20">
+      </div>
+      <button id="start-game-btn" class="btn-primary">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Info Modal -->
+  <div id="info-modal" class="modal">
+    <div class="modal-content">
+      <h2>How to Play</h2>
+      <div class="instructions">
+        <p><i class="fa-solid fa-shuttle-space"></i> Move your spaceship with WASD or Arrow Keys</p>
+        <p><i class="fa-solid fa-star"></i> Collect stars to earn points</p>
+        <p><i class="fa-solid fa-earth-africa"></i> Complete levels by collecting all stars</p>
+        <p><i class="fa-solid fa-shuttle-space"></i> Avoid obstacles (coming soon!)</p>
+        <p><i class="fa-solid fa-trophy"></i> Compete for high scores!</p>
+      </div>
+      <button id="close-info-btn" class="btn-primary">Got it!</button>
+    </div>
+  </div>
+
+  <!-- Highscores Modal -->
+  <div id="highscores-modal" class="modal">
+    <div class="modal-content">
+      <h2><i class="fa-solid fa-trophy"></i> Top Scores</h2>
+      <div id="highscores-list" class="highscores-list">
+        <!-- Highscores will be populated here -->
+      </div>
+      <button id="close-highscores-btn" class="btn-primary">Close</button>
+    </div>
+  </div>
+</body>
+
+</html>

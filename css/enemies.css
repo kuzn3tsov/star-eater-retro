@@ -1,0 +1,99 @@
+/* ===============================
+   NEPRIJATELJI I BOSSOVI
+   =============================== */
+
+.alien {
+    position: absolute;
+    font-size: 1.8rem;
+    transition: transform 0.1s linear;
+}
+
+/* Boje neprijatelja po razini */
+.alien.lvl1 {
+    color: Teal;
+}
+
+.alien.lvl2 {
+    color: SlateGray;
+}
+
+.alien.lvl3 {
+    color: SkyBlue;
+}
+
+.alien.lvl4 {
+    color: DeepPink;
+}
+
+/* Boss */
+.boss {
+    position: absolute;
+    font-size: 4rem;
+    text-shadow: 0 0 30px aqua;
+    z-index: 10;
+}
+
+.boss.teal {
+    color: Teal;
+}
+
+.boss.slate {
+    color: SlateGray;
+}
+
+.boss.sky {
+    color: SkyBlue;
+}
+
+.boss.pink {
+    color: DeepPink;
+}
+
+/* Megaboss */
+.boss.megaboss {
+    font-size: 6rem;
+    background: linear-gradient(270deg, Teal, SlateGray, SkyBlue, DeepPink);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: bossGradientShift 4s linear infinite;
+    text-shadow: none;
+}
+
+@keyframes bossGradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Projektili neprijatelja */
+.meteor {
+    position: absolute;
+    color: orange;
+    text-shadow: 0 0 20px red;
+    font-size: 1.2rem;
+}
+
+/* Efekt otrovne magle bossa */
+.toxic-cloud {
+    position: absolute;
+    background: radial-gradient(circle, rgba(173, 255, 47, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: cloudFade 5s ease-out forwards;
+}
+
+@keyframes cloudFade {
+    0% {
+        opacity: 0.9;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(2.2);
+    }
+}
