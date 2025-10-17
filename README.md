@@ -1,20 +1,20 @@
-# ✅ Star Eater – Phase & File-Based Task Checklist
+# Star Eater – Phase & File-Based Task Checklist
 
-## 🧱 Phase 1: Project Setup
+## Phase 1: Project Setup
 
 ### General Setup
-- [ ] Initialize project with Vite or Create React App
-- [ ] Install React, React-DOM
-- [ ] Optionally install Howler.js for audio
-- [ ] Create directory structure:
-  - [ ] `assets/graphics/`
-  - [ ] `assets/sounds/`
-  - [ ] `css/`
-  - [ ] `js/`
-  - [ ] `data/`
-  - [ ] `tests/`
-  - [ ] `index.html`
-  - [ ] `favicon.ico`
+- [x] Initialize project with Vite or Create React App
+- [x] Install React, React-DOM
+- [x] Optionally install Howler.js for audio
+- [x] Create directory structure:
+  - [x] `assets/graphics/`
+  - [x] `assets/sounds/`
+  - [x] `css/`
+  - [x] `js/`
+  - [x] `data/`
+  - [x] `tests/`
+  - [x] `index.html`
+  - [x] `favicon.ico`
 
 ### Files
 #### `game-engine.js`
