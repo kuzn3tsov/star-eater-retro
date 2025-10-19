@@ -1,0 +1,754 @@
+:root {
+    --neon-cyan: #0ff;
+    --neon-gold: #daa520;
+    --dark-blue: #071018;
+    --near-black: #0b0f14;
+    --enemy-teal: #20b2aa;
+    --enemy-silver: #c0c0c0;
+    --enemy-blue: #1e90ff;
+    --enemy-pink: #ff69b4;
+    --powerup-shield: #00ff00;
+    --powerup-ion: #00ffff;
+    --powerup-radar: #ffa500;
+    --powerup-starpower: #1e90ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', monospace;
+    background: linear-gradient(135deg, var(--dark-blue), var(--near-black));
+    color: var(--neon-cyan);
+    overflow: hidden;
+    height: 100vh;
+    padding: 20px;
+}
+
+#hud {
+    position: relative;
+    z-index: 1000;
+    background: rgba(7, 16, 24, 0.9);
+    border: 2px solid var(--neon-cyan);
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.hud-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.game-title {
+    font-size: 14px;
+    color: var(--neon-gold);
+    text-shadow: 0 0 10px var(--neon-gold);
+}
+
+.hud-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.hud-right:hover {
+    color: var(--neon-gold);
+}
+
+/* HUD ICON STYLES */
+.hud-icon,
+.status-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 3px var(--neon-cyan));
+}
+
+/* Ensure all SVG icons in HUD are properly sized */
+.hud-icon svg,
+.status-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+}
+
+.hud-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.player-name {
+    font-size: 10px;
+    color: var(--neon-gold);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.powerups {
+    display: flex;
+    gap: 8px;
+}
+
+.powerup-container {
+    position: relative;
+    display: inline-block;
+}
+
+.powerup-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.3;
+    transition: opacity 0.3s, filter 0.3s;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Ensure power-up SVGs are properly sized */
+.powerup-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+}
+
+.powerup-icon.active {
+    opacity: 1;
+}
+
+.powerup-icon.cooldown {
+    opacity: 0.3;
+    filter: none;
+}
+
+.powerup-icon.ready-glow {
+    opacity: 1;
+}
+
+.powerup-icon.blink {
+    animation: powerup-blink 0.5s ease-in-out infinite !important;
+    opacity: 1 !important;
+}
+
+/* Consistent styling for all power-ups */
+#shield.active:not(.cooldown) {
+    filter: drop-shadow(0 0 8px var(--powerup-shield)) drop-shadow(0 0 15px var(--powerup-shield));
+    animation: powerupActive 2s ease-in-out infinite;
+}
+
+#ionPulse.active:not(.cooldown) {
+    filter: drop-shadow(0 0 8px var(--powerup-ion)) drop-shadow(0 0 15px var(--powerup-ion));
+    animation: powerupActive 2s ease-in-out infinite;
+}
+
+#radar.active:not(.cooldown) {
+    filter: drop-shadow(0 0 8px var(--powerup-radar)) drop-shadow(0 0 15px var(--powerup-radar));
+    animation: powerupActive 2s ease-in-out infinite;
+}
+
+#starPower.active:not(.cooldown) {
+    filter: drop-shadow(0 0 8px var(--powerup-starpower)) drop-shadow(0 0 15px var(--powerup-starpower));
+    animation: powerupActive 2s ease-in-out infinite;
+}
+
+@keyframes powerupActive {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 15px currentColor);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px currentColor) drop-shadow(0 0 25px currentColor);
+    }
+}
+
+/* Ready glow states */
+#shield.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 5px var(--powerup-shield));
+}
+
+#ionPulse.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 5px var(--powerup-ion));
+}
+
+#radar.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 5px var(--powerup-radar));
+}
+
+#starPower.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 5px var(--powerup-starpower));
+}
+
+/* Blink animations with consistent styling */
+#shield.blink {
+    animation: powerup-blink 0.5s ease-in-out infinite, shield-blink 2s ease-in-out infinite;
+}
+
+#ionPulse.blink {
+    animation: powerup-blink 0.5s ease-in-out infinite, ion-blink 2s ease-in-out infinite;
+}
+
+#radar.blink {
+    animation: powerup-blink 0.5s ease-in-out infinite, radar-blink 2s ease-in-out infinite;
+}
+
+#starPower.blink {
+    animation: powerup-blink 0.5s ease-in-out infinite, star-power-blink 2s ease-in-out infinite;
+}
+
+@keyframes powerup-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes shield-blink {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px var(--powerup-shield));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--powerup-shield)) drop-shadow(0 0 20px var(--powerup-shield));
+    }
+}
+
+@keyframes ion-blink {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px var(--powerup-ion));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--powerup-ion)) drop-shadow(0 0 20px var(--powerup-ion));
+    }
+}
+
+@keyframes radar-blink {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px var(--powerup-radar));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--powerup-radar)) drop-shadow(0 0 20px var(--powerup-radar));
+    }
+}
+
+@keyframes star-power-blink {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px var(--powerup-starpower));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--powerup-starpower)) drop-shadow(0 0 20px var(--powerup-starpower));
+    }
+}
+
+/* COOLDOWN TIMER STYLES (top-right - primary position) */
+.cooldown-timer {
+    position: absolute;
+    top: -12px;
+    /* Moved higher */
+    right: -12px;
+    /* Moved further out */
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px currentColor;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1001;
+    font-family: 'Press Start 2P', monospace;
+}
+
+/* ACTIVE DURATION TIMER STYLES (top-right - secondary position, slightly lower) */
+.active-timer {
+    position: absolute;
+    top: -4px;
+    /* Positioned higher but below cooldown timer */
+    right: -12px;
+    /* Moved further out */
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px currentColor;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1001;
+    font-family: 'Press Start 2P', monospace;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+    .cooldown-timer,
+    .active-timer {
+        width: 12px;
+        height: 12px;
+        font-size: 6px;
+    }
+
+    .cooldown-timer {
+        top: -10px;
+        right: -10px;
+    }
+
+    .active-timer {
+        top: -3px;
+        right: -10px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .cooldown-timer,
+    .active-timer {
+        width: 10px;
+        height: 10px;
+        font-size: 5px;
+    }
+
+    .cooldown-timer {
+        top: -8px;
+        right: -8px;
+    }
+
+    .active-timer {
+        top: -2px;
+        right: -8px;
+    }
+}
+
+.controls-right {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    background: none;
+    border: 1px solid var(--neon-cyan);
+    border-radius: 4px;
+    padding: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.control-btn:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.control-btn img {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+/* Ensure control button SVGs are properly sized */
+.control-btn svg {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+
+#game-container {
+    position: relative;
+    width: calc(100vw - 40px);
+    height: calc(100vh - 180px);
+    border: 3px solid var(--neon-cyan);
+    border-radius: 8px;
+    box-shadow: 0 0 20px var(--neon-cyan);
+    overflow: hidden;
+}
+
+#game-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: linear-gradient(135deg, var(--dark-blue), var(--near-black));
+}
+
+.high-score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.high-score-item:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.high-score-item.top-score {
+    color: var(--neon-gold);
+    font-weight: bold;
+    border-bottom: 2px solid var(--neon-gold);
+}
+
+.score-rank {
+    width: 30px;
+    color: var(--neon-cyan);
+}
+
+.score-name {
+    flex: 1;
+    text-align: left;
+    color: inherit;
+}
+
+.score-value {
+    width: 80px;
+    text-align: right;
+    color: inherit;
+}
+
+.no-scores {
+    text-align: center;
+    padding: 20px;
+    color: var(--neon-cyan);
+    font-size: 12px;
+}
+
+@keyframes textFloat {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -100px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Star Power specific enhancements */
+.star-power-active {
+    position: relative;
+}
+
+.star-power-active::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 1px solid var(--powerup-starpower);
+    border-radius: 4px;
+    animation: starPowerBorder 1s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes starPowerBorder {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px var(--powerup-starpower), inset 0 0 5px var(--powerup-starpower);
+    }
+
+    50% {
+        box-shadow: 0 0 15px var(--powerup-starpower), inset 0 0 15px var(--powerup-starpower);
+    }
+}
+
+/* Power-up tooltip enhancements */
+.powerup-icon:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    z-index: 1002;
+    border: 1px solid var(--neon-cyan);
+}
+
+/* Status effect animations */
+.status-effect {
+    animation: statusPulse 1s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    #game-container {
+        width: calc(100vw - 20px);
+        height: calc(100vh - 160px);
+    }
+
+    .game-title {
+        font-size: 10px;
+    }
+
+    .status-item {
+        font-size: 8px;
+    }
+
+    .hud-icon,
+    .status-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .powerup-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .cooldown-timer,
+    .active-timer {
+        width: 12px;
+        height: 12px;
+        font-size: 6px;
+        top: -6px;
+    }
+
+    .cooldown-timer {
+        right: -6px;
+    }
+
+    .active-timer {
+        left: -6px;
+    }
+
+    .hud {
+        padding: 8px 12px;
+    }
+
+    .hud-right {
+        font-size: 10px;
+    }
+
+    .high-score-item {
+        font-size: 10px;
+        padding: 8px 0;
+    }
+
+    .powerups {
+        gap: 6px;
+    }
+
+    .control-btn {
+        padding: 4px;
+    }
+
+    .control-btn img {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .powerup-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .cooldown-timer,
+    .active-timer {
+        width: 10px;
+        height: 10px;
+        font-size: 5px;
+        top: -5px;
+    }
+
+    .cooldown-timer {
+        right: -5px;
+    }
+
+    .active-timer {
+        left: -5px;
+    }
+
+    .status-left {
+        gap: 10px;
+    }
+
+    .powerups {
+        gap: 4px;
+    }
+
+    .hud-icon,
+    .status-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .control-btn {
+        padding: 3px;
+    }
+
+    .control-btn img {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+/* Ensure all container elements prevent overflow */
+.hud-left,
+.hud-right,
+.status-left,
+.controls-right {
+    overflow: visible;
+}
+
+/* Force all images and SVGs in HUD to respect container sizing */
+#hud img,
+#hud svg {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    display: block !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .powerup-icon {
+        border: 1px solid currentColor;
+    }
+
+    .cooldown-timer,
+    .active-timer {
+        border: 1px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    .powerup-icon.blink,
+    #starPower.active,
+    .cooldown-timer,
+    .active-timer {
+        animation: none;
+    }
+
+    .powerup-icon {
+        transition: none;
+    }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+
+    .cooldown-timer,
+    .active-timer {
+        color: #fff;
+        text-shadow: 0 0 2px #000;
+    }
+}
+
+/* Focus styles for accessibility */
+.powerup-icon:focus {
+    outline: 2px solid var(--neon-cyan);
+    outline-offset: 2px;
+}
+
+.control-btn:focus {
+    outline: 2px solid var(--neon-gold);
+    outline-offset: 2px;
+}
+
+/* Ensure no conflicting positioning */
+.powerup-container {
+    position: relative !important;
+}
+
+.powerup-icon {
+    position: relative !important;
+}
+
+/* Clear any inherited positioning that might break the layout */
+.cooldown-timer,
+.active-timer {
+    bottom: auto !important;
+    transform: none !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+}

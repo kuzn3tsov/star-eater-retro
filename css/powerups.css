@@ -1,0 +1,175 @@
+/* POWER-UP SPECIFIC STYLES */
+
+/* Shield as child of player */
+#player-avatar .shield-powerup {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid #00ff00;
+    box-shadow:
+        0 0 20px #00ff00,
+        0 0 40px #00ff00,
+        inset 0 0 20px #00ff00;
+    pointer-events: none;
+    z-index: -1;
+    animation: shieldPulse 1s ease-in-out infinite;
+    width: 96px;
+    height: 96px;
+    transform-origin: center center;
+    transition: none;
+    will-change: transform;
+    /* Center the shield on player */
+    left: -24px !important;
+    top: -24px !important;
+}
+
+@keyframes shieldPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* Ion Pulse Power-up */
+.ion-pulse-powerup {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 998;
+    animation: ionExpand 1s ease-out forwards;
+    width: 450px;
+    height: 450px;
+}
+
+@keyframes ionExpand {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* Radar Power-up */
+.radar-ping-powerup {
+    position: absolute;
+    border: 2px solid #00ffff;
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+    z-index: 997;
+    animation: radarExpand 3s ease-out forwards;
+}
+
+.radar-indicator {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00ffff;
+    box-shadow: 0 0 10px #00ffff;
+    pointer-events: none;
+    z-index: 996;
+    animation: radarBlink 1s ease-in-out infinite;
+}
+
+@keyframes radarExpand {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+@keyframes radarBlink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* Extended Power Unlock Effect */
+.extended-power-unlock-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ff00ff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+    z-index: 1001;
+    pointer-events: none;
+    animation: extendedPowerText 3s ease-out forwards;
+}
+
+@keyframes extendedPowerText {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+    }
+}
+
+/* Endless Mode Indicator */
+.endless-mode-active {
+    filter: hue-rotate(90deg) brightness(1.5) !important;
+}
+
+.endless-mode-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    color: #ff4444;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff4444;
+    z-index: 1000;
+    animation: endlessPulse 2s ease-in-out infinite;
+}
+
+@keyframes endlessPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}

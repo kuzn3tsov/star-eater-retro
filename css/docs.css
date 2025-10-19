@@ -1,0 +1,306 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(135deg, #071018 0%, #0b0f14 100%);
+    color: #0ff;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(11, 15, 20, 0.9);
+    border: 3px solid #0ff;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3),
+        inset 0 0 30px rgba(0, 255, 255, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Grid Background */
+.grid-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(rgba(7, 16, 24, 0.9) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(7, 16, 24, 0.9) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(90deg, #0a141e 0%, #0ff 50%, #0a141e 100%);
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 3px solid #0ff;
+    position: relative;
+}
+
+.title {
+    font-size: 2.5em;
+    color: #daa520;
+    text-shadow: 0 0 20px #daa520,
+        0 0 30px #daa520,
+        0 0 40px #ff0;
+    margin-bottom: 10px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
+    margin-bottom: 15px;
+}
+
+.version {
+    background: #daa520;
+    color: #071018;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Navigation */
+nav {
+    background: rgba(0, 255, 255, 0.1);
+    padding: 15px;
+    border-bottom: 2px solid #0ff;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: 2px solid #0ff;
+    color: #0ff;
+    padding: 10px 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.7em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+
+.nav-btn:hover {
+    background: #0ff;
+    color: #071018;
+    box-shadow: 0 0 20px #0ff;
+}
+
+/* Main Content */
+main {
+    padding: 30px;
+}
+
+.section {
+    margin-bottom: 40px;
+    padding: 25px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    position: relative;
+}
+
+.section::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 1px solid #0ff;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.section:hover::before {
+    opacity: 1;
+}
+
+h2 {
+    color: #daa520;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+    border-bottom: 2px solid #0ff;
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: #0ff;
+    font-size: 1.1em;
+    margin: 25px 0 15px 0;
+    text-shadow: 0 0 5px #0ff;
+}
+
+p {
+    margin-bottom: 15px;
+    font-size: 0.85em;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.75em;
+}
+
+th {
+    background: rgba(0, 255, 255, 0.2);
+    color: #daa520;
+    padding: 12px 8px;
+    border: 1px solid #0ff;
+    text-align: left;
+}
+
+td {
+    padding: 10px 8px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    background: rgba(0, 255, 255, 0.05);
+}
+
+tr:hover td {
+    background: rgba(0, 255, 255, 0.1);
+}
+
+/* Lists */
+ul,
+ol {
+    margin: 15px 0 15px 20px;
+    font-size: 0.85em;
+}
+
+li {
+    margin-bottom: 8px;
+    padding-left: 10px;
+}
+
+/* Code/Structure Blocks */
+.code-block {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #0ff;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
+    color: #0ff;
+    overflow-x: auto;
+}
+
+/* Icon Styles */
+.icon {
+    color: #daa520;
+    margin: 0 5px;
+    text-shadow: 0 0 5px #daa520;
+}
+
+.icon-cyan {
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+}
+
+/* Status Indicators */
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 2px;
+    background: rgba(0, 255, 255, 0.2);
+    border: 1px solid #0ff;
+    border-radius: 3px;
+    font-size: 0.7em;
+}
+
+/* Animations */
+@keyframes glow {
+    from {
+        text-shadow: 0 0 20px #daa520,
+            0 0 30px #daa520,
+            0 0 40px #ff0;
+    }
+
+    to {
+        text-shadow: 0 0 25px #daa520,
+            0 0 35px #daa520,
+            0 0 50px #ff0;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 2px solid #0ff;
+    background: rgba(0, 255, 255, 0.1);
+    font-size: 0.7em;
+    color: #daa520;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.8em;
+    }
+
+    .subtitle {
+        font-size: 1em;
+    }
+
+    .nav-links {
+        flex-direction: column;
+    }
+
+    .nav-btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    table {
+        font-size: 0.65em;
+    }
+
+    .section {
+        padding: 15px;
+    }
+}

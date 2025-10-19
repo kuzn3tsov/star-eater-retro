@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Eater - Retro Space Survival</title>
+
+  <meta name="description" content="Star Eater - Retro Arkadna Igra u kojoj preživljavaš i jedeš zvjezdice">
+  <meta name="author" content="Lem Treursić">
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/player.css">
+  <link rel="stylesheet" href="css/enemies.css">
+  <link rel="stylesheet" href="css/powerups.css">
+  <link rel="stylesheet" href="css/projectiles.css">
+  <link rel="stylesheet" href="css/modals.css">
+
+  <script type="module" src="js/main.js"></script>
+</head>
+
+<body>
+  <!-- HUD Outside Game Container -->
+  <div id="hud">
+    <div class="hud-top">
+      <div class="hud-left">
+        <img src="assets/graphics/hud-top-rocket.svg" alt="Rocket" class="hud-icon">
+        <span class="game-title">STAR EATER</span>
+        <img src="assets/graphics/hud-top-star.svg" alt="Star" class="hud-icon">
+      </div>
+      <div class="hud-right" id="high-score-btn">
+        <img src="assets/graphics/hud-top-highscore.svg" alt="High Score" class="hud-icon">
+        <span id="high-score">00000</span>
+      </div>
+    </div>
+
+    <div class="hud-bottom">
+      <div class="status-left">
+        <div class="player-name" id="player-name">PLAYER</div>
+        <div class="status-item">
+          <img src="assets/graphics/hud-player-score.svg" alt="Score" class="status-icon">
+          <span id="score">00000</span>
+        </div>
+        <div class="status-item">
+          <img src="assets/graphics/hud-player-level.svg" alt="Level" class="status-icon">
+          <span id="level">01</span>
+        </div>
+        <div class="status-item">
+          <img src="assets/graphics/hud-player-life.svg" alt="Lives" class="status-icon">
+          <span id="lives">3</span>
+        </div>
+        <div class="powerups">
+          <img src="assets/graphics/hud-player-radar.svg" alt="Radar" id="radar-icon" class="powerup-icon hidden"
+            title="Radar">
+          <img src="assets/graphics/hud-player-shield.svg" alt="Shield" id="shield-icon" class="powerup-icon hidden"
+            title="Shield">
+          <img src="assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse" id="ion-icon" class="powerup-icon hidden"
+            title="Ion Pulse">
+          <img src="assets/graphics/hud-player-freeze.svg" alt="Freeze" id="freeze-icon" class="powerup-icon hidden"
+            title="Freeze">
+          <img src="assets/graphics/hud-player-star-power.svg" alt="Star Power" id="star-power-icon"
+            class="powerup-icon hidden" title="Star Power">
+          <img src="assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode" id="endless-icon"
+            class="powerup-icon hidden" title="Endless Mode">
+        </div>
+      </div>
+
+      <div class="controls-right">
+        <button id="play-pause-btn" class="control-btn" title="Play/Pause">
+          <img src="assets/graphics/hud-controls-play.svg" alt="Play" id="play-icon">
+          <img src="assets/graphics/hud-controls-pause.svg" alt="Pause" id="pause-icon" class="hidden">
+        </button>
+        <button id="restart-btn" class="control-btn" title="Restart">
+          <img src="assets/graphics/hud-controls-restart.svg" alt="Restart">
+        </button>
+        <button id="sound-btn" class="control-btn" title="Sound On/Off">
+          <img src="assets/graphics/hud-controls-sound-on.svg" alt="Sound On" id="sound-on-icon">
+          <img src="assets/graphics/hud-controls-sound-off.svg" alt="Sound Off" id="sound-off-icon" class="hidden">
+        </button>
+        <button id="info-btn" class="control-btn" title="Info">
+          <img src="assets/graphics/hud-controls-info.svg" alt="Info">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Container - Full Page with Border -->
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <div id="particles-container"></div>
+  </div>
+
+  <!-- Modals Container -->
+  <div id="modals-container">
+    <!-- Intro Modal -->
+    <div id="intro-modal" class="modal">
+      <div class="modal-content">
+        <h2>STAR EATER</h2>
+        <div class="input-group">
+          <label for="player-name-input">ENTER YOUR NAME:</label>
+          <input type="text" id="player-name-input" maxlength="12" value="PLAYER">
+        </div>
+        <button id="start-game-btn" class="modal-btn primary">START MISSION</button>
+      </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>MISSION FAILED</h2>
+        <p>Final Score: <span id="final-score">00000</span></p>
+        <button id="restart-modal-btn" class="modal-btn primary">TRY AGAIN</button>
+      </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div id="victory-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>VICTORY!</h2>
+        <p>Cosmic Horror Defeated!</p>
+        <p>Final Score: <span id="victory-score">00000</span></p>
+        <button id="endless-mode-btn" class="modal-btn primary">ENDLESS MODE</button>
+      </div>
+    </div>
+
+    <!-- High Scores Modal -->
+    <div id="high-scores-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>HIGH SCORES</h2>
+        <div id="high-scores-list"></div>
+        <button class="modal-btn secondary" id="close-scores-btn">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>CONTROLS & POWER-UPS</h2>
+        <div class="info-section">
+          <h3>CONTROLS</h3>
+          <p>WASD - Move Ship</p>
+          <p>Q - Activate Shield</p>
+          <p>E - Ion Pulse</p>
+        </div>
+        <div class="info-section">
+          <h3>POWER-UPS</h3>
+          <p>Gold Star - +2 Points</p>
+          <p>Green Star - Freeze Enemies</p>
+          <p>Blue Star - Destroy on Contact</p>
+          <p>Purple Star - Destroy All Enemies</p>
+          <p>Red Rocket - Extra Life</p>
+        </div>
+        <button class="modal-btn secondary" id="close-info-btn">CLOSE</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--dark-blue), var(--near-black));
+    border: 3px solid var(--neon-cyan);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 30px var(--neon-cyan);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal h2 {
+    color: var(--neon-gold);
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-shadow: 0 0 10px var(--neon-gold);
+}
+
+.input-group {
+    margin: 20px 0;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+.input-group input {
+    background: var(--near-black);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    text-align: center;
+    width: 200px;
+    border-radius: 4px;
+}
+
+.modal-btn {
+    background: var(--near-black);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: 12px 24px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.modal-btn.primary {
+    background: var(--neon-cyan);
+    color: var(--dark-blue);
+    border-color: var(--neon-cyan);
+}
+
+.modal-btn:hover {
+    box-shadow: 0 0 15px var(--neon-cyan);
+    transform: translateY(-2px);
+}
+
+.info-section {
+    margin: 15px 0;
+    text-align: left;
+}
+
+.info-section h3 {
+    color: var(--neon-gold);
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+.info-section p {
+    font-size: 10px;
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+#high-scores-list {
+    margin: 20px 0;
+    text-align: left;
+}
+
+/* Scrollbar styling for modal */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--dark-blue);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-gold);
+}

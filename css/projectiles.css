@@ -1,0 +1,85 @@
+.projectile {
+    position: absolute;
+    pointer-events: none;
+}
+
+.projectile-meteor {
+    fill: #8b4513;
+    filter: drop-shadow(0 0 5px #8b4513);
+    animation: meteorSpin 1s linear infinite;
+}
+
+.projectile-big-meteor {
+    fill: #654321;
+    filter: drop-shadow(0 0 8px #654321);
+    animation: bigMeteorSpin 2s linear infinite;
+}
+
+.projectile-burst {
+    fill: #ff4444;
+    filter: drop-shadow(0 0 10px #ff4444);
+    animation: burstPulse 0.3s ease-in-out infinite;
+}
+
+@keyframes meteorSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bigMeteorSpin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes burstPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+}
+
+/* Laser Beams */
+.laser-beam {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, #ff4444, transparent);
+    pointer-events: none;
+    animation: laserFlash 0.1s ease-out;
+}
+
+@keyframes laserFlash {
+    0% {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+}

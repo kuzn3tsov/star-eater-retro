@@ -1,0 +1,535 @@
+.enemy {
+    position: absolute;
+    transition: transform 0.2s;
+}
+
+/* Enemy Type Colors */
+.enemy-teal {
+    fill: #20b2aa;
+    filter: drop-shadow(0 0 8px #20b2aa);
+}
+
+.enemy-silver {
+    fill: #c0c0c0;
+    filter: drop-shadow(0 0 8px #c0c0c0);
+}
+
+.enemy-blue {
+    fill: #1e90ff;
+    filter: drop-shadow(0 0 8px #1e90ff);
+}
+
+.enemy-pink {
+    fill: #ff69b4;
+    filter: drop-shadow(0 0 8px #ff69b4);
+}
+
+/* Enemy Categories */
+.enemy-rammer {
+    animation: rammerPulse 1s infinite;
+}
+
+.enemy-shooter {
+    animation: shooterPulse 0.5s infinite;
+}
+
+.enemy-beam-shooter {
+    animation: beamShooterPulse 0.3s infinite;
+}
+
+.enemy-destroyer {
+    animation: destroyerPulse 0.8s infinite;
+}
+
+@keyframes rammerPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes shooterPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes beamShooterPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes destroyerPulse {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    25% {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    75% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+}
+
+.enemy-frozen {
+    animation-play-state: paused;
+    filter: grayscale(1) brightness(2) drop-shadow(0 0 10px #00ffff);
+}
+
+.enemy-damage {
+    animation: enemyDamageFlash 0.2s;
+}
+
+@keyframes enemyDamageFlash {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.enemy-explosion {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ff4444 0%, #ffaa00 50%, transparent 100%);
+    pointer-events: none;
+    animation: enemyExplode 0.6s ease-out;
+}
+
+@keyframes enemyExplode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Enemy freeze effect with timer */
+.enemy-freeze-effect {
+    position: absolute;
+    border: 2px solid #00ffff;
+    border-radius: 4px;
+    box-shadow: 0 0 15px #00ffff;
+    pointer-events: none;
+    z-index: 945;
+    animation: freezePulse 1s ease-in-out infinite;
+}
+
+.freeze-timer {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #00ffff;
+    font-size: 8px;
+    font-weight: bold;
+    text-shadow: 0 0 3px #000;
+    font-family: 'Press Start 2P', monospace;
+    white-space: nowrap;
+}
+
+@keyframes freezePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 15px #00ffff;
+    }
+
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 25px #00ffff;
+    }
+}
+
+/* Specific enemy type combinations - Fixed without composes */
+.enemy-rammer-teal {
+    animation: rammerPulse 1s infinite;
+    fill: #20b2aa;
+    filter: drop-shadow(0 0 8px #20b2aa);
+}
+
+.enemy-rammer-silver {
+    animation: rammerPulse 1s infinite;
+    fill: #c0c0c0;
+    filter: drop-shadow(0 0 8px #c0c0c0);
+}
+
+.enemy-rammer-blue {
+    animation: rammerPulse 1s infinite;
+    fill: #1e90ff;
+    filter: drop-shadow(0 0 8px #1e90ff);
+}
+
+.enemy-rammer-pink {
+    animation: rammerPulse 1s infinite;
+    fill: #ff69b4;
+    filter: drop-shadow(0 0 8px #ff69b4);
+}
+
+.enemy-shooter-teal {
+    animation: shooterPulse 0.5s infinite;
+    fill: #20b2aa;
+    filter: drop-shadow(0 0 8px #20b2aa);
+}
+
+.enemy-shooter-silver {
+    animation: shooterPulse 0.5s infinite;
+    fill: #c0c0c0;
+    filter: drop-shadow(0 0 8px #c0c0c0);
+}
+
+.enemy-shooter-blue {
+    animation: shooterPulse 0.5s infinite;
+    fill: #1e90ff;
+    filter: drop-shadow(0 0 8px #1e90ff);
+}
+
+.enemy-shooter-pink {
+    animation: shooterPulse 0.5s infinite;
+    fill: #ff69b4;
+    filter: drop-shadow(0 0 8px #ff69b4);
+}
+
+.enemy-beam-shooter-teal {
+    animation: beamShooterPulse 0.3s infinite;
+    fill: #20b2aa;
+    filter: drop-shadow(0 0 8px #20b2aa);
+}
+
+.enemy-beam-shooter-silver {
+    animation: beamShooterPulse 0.3s infinite;
+    fill: #c0c0c0;
+    filter: drop-shadow(0 0 8px #c0c0c0);
+}
+
+.enemy-beam-shooter-blue {
+    animation: beamShooterPulse 0.3s infinite;
+    fill: #1e90ff;
+    filter: drop-shadow(0 0 8px #1e90ff);
+}
+
+.enemy-beam-shooter-pink {
+    animation: beamShooterPulse 0.3s infinite;
+    fill: #ff69b4;
+    filter: drop-shadow(0 0 8px #ff69b4);
+}
+
+.enemy-destroyer-teal {
+    animation: destroyerPulse 0.8s infinite;
+    fill: #20b2aa;
+    filter: drop-shadow(0 0 8px #20b2aa);
+}
+
+.enemy-destroyer-silver {
+    animation: destroyerPulse 0.8s infinite;
+    fill: #c0c0c0;
+    filter: drop-shadow(0 0 8px #c0c0c0);
+}
+
+.enemy-destroyer-blue {
+    animation: destroyerPulse 0.8s infinite;
+    fill: #1e90ff;
+    filter: drop-shadow(0 0 8px #1e90ff);
+}
+
+.enemy-destroyer-pink {
+    animation: destroyerPulse 0.8s infinite;
+    fill: #ff69b4;
+    filter: drop-shadow(0 0 8px #ff69b4);
+}
+
+/* Enemy states */
+.enemy-spawning {
+    animation: enemySpawn 0.5s ease-out;
+}
+
+@keyframes enemySpawn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.enemy-dying {
+    animation: enemyDeath 0.4s ease-in forwards;
+}
+
+@keyframes enemyDeath {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+/* Enemy warning effects */
+.enemy-warning {
+    position: absolute;
+    border: 2px dashed #ff4444;
+    border-radius: 50%;
+    animation: warningPulse 1s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 935;
+}
+
+@keyframes warningPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+/* Boss enemy specific styles */
+.enemy-boss {
+    filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    animation: bossPulse 2s ease-in-out infinite;
+}
+
+@keyframes bossPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 20px currentColor) drop-shadow(0 0 35px currentColor);
+    }
+}
+
+/* Mini-boss variants */
+.enemy-mini-boss {
+    filter: drop-shadow(0 0 12px currentColor) drop-shadow(0 0 20px currentColor);
+    animation: miniBossPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes miniBossPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+/* Enemy hit flash */
+.enemy-hit {
+    animation: enemyHitFlash 0.15s ease-out;
+}
+
+@keyframes enemyHitFlash {
+    0% {
+        filter: brightness(3) drop-shadow(0 0 20px #ffffff);
+    }
+
+    100% {
+        filter: brightness(1) drop-shadow(0 0 8px currentColor);
+    }
+}
+
+/* Enemy shield effects */
+.enemy-shielded {
+    position: relative;
+}
+
+.enemy-shielded::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    animation: enemyShieldPulse 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes enemyShieldPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        box-shadow: 0 0 10px #00ffff;
+    }
+
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 20px #00ffff;
+    }
+}
+
+/* Enemy spawn portal effect */
+.enemy-spawn-portal {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 30%, currentColor 100%);
+    animation: spawnPortal 0.8s ease-out forwards;
+    pointer-events: none;
+    z-index: 940;
+}
+
+@keyframes spawnPortal {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* Responsive enemy sizes */
+@media (max-width: 768px) {
+    .enemy {
+        transform: scale(0.9);
+    }
+
+    .enemy-rammer {
+        animation: rammerPulseMobile 1s infinite;
+    }
+
+    @keyframes rammerPulseMobile {
+
+        0%,
+        100% {
+            transform: scale(0.9);
+        }
+
+        50% {
+            transform: scale(1);
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .enemy {
+        transform: scale(0.8);
+    }
+
+    .enemy-rammer {
+        animation: rammerPulseSmall 1s infinite;
+    }
+
+    @keyframes rammerPulseSmall {
+
+        0%,
+        100% {
+            transform: scale(0.8);
+        }
+
+        50% {
+            transform: scale(0.9);
+        }
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .enemy-teal {
+        filter: drop-shadow(0 0 5px #20b2aa) brightness(1.5);
+    }
+
+    .enemy-silver {
+        filter: drop-shadow(0 0 5px #c0c0c0) brightness(1.5);
+    }
+
+    .enemy-blue {
+        filter: drop-shadow(0 0 5px #1e90ff) brightness(1.5);
+    }
+
+    .enemy-pink {
+        filter: drop-shadow(0 0 5px #ff69b4) brightness(1.5);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    .enemy-rammer,
+    .enemy-shooter,
+    .enemy-beam-shooter,
+    .enemy-destroyer,
+    .enemy-boss,
+    .enemy-mini-boss {
+        animation: none;
+    }
+
+    .enemy-frozen {
+        filter: grayscale(1) brightness(2) drop-shadow(0 0 10px #00ffff);
+    }
+
+    .enemy-damage {
+        animation: none;
+        opacity: 0.7;
+    }
+}

@@ -1,0 +1,187 @@
+.collectible {
+    position: absolute;
+    animation: float 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden !important;
+}
+
+.collectible svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Specific collectible animations */
+.collectible.gold-star svg {
+    filter: drop-shadow(0 0 10px #daa520) drop-shadow(0 0 20px #ffd700);
+    animation: goldGlow 1.5s ease-in-out infinite;
+}
+
+.collectible.green-star svg {
+    filter: drop-shadow(0 0 10px #00ff00) drop-shadow(0 0 20px #00ff00);
+    animation: greenPulse 1s ease-in-out infinite;
+}
+
+.collectible.blue-star svg {
+    filter: drop-shadow(0 0 10px #1e90ff) drop-shadow(0 0 20px #1e90ff);
+    animation: blueSpin 2s linear infinite;
+}
+
+.collectible.purple-star svg {
+    filter: drop-shadow(0 0 10px #9370db) drop-shadow(0 0 20px #9370db);
+    animation: purplePulse 0.8s ease-in-out infinite;
+}
+
+.collectible.red-rocket svg {
+    filter: drop-shadow(0 0 10px #ff4444) drop-shadow(0 0 20px #ff4444);
+    animation: rocketPulse 1.2s ease-in-out infinite;
+}
+
+.collectible.azure-bomb svg {
+    filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff);
+    animation: bombFlash 0.5s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.05);
+    }
+}
+
+@keyframes goldGlow {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1) rotate(180deg);
+    }
+}
+
+@keyframes greenPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes blueSpin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes purplePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px #9370db);
+    }
+
+    50% {
+        transform: scale(1.3);
+        filter: drop-shadow(0 0 20px #9370db) drop-shadow(0 0 30px #9370db);
+    }
+}
+
+@keyframes rocketPulse {
+
+    0%,
+    100% {
+        transform: scale(1) translateX(0);
+    }
+
+    25% {
+        transform: scale(1.1) translateX(-2px);
+    }
+
+    75% {
+        transform: scale(1.1) translateX(2px);
+    }
+}
+
+@keyframes bombFlash {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Collection Effects */
+.collect-effect {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: collectExpand 0.6s ease-out;
+}
+
+.collect-effect-gold {
+    background: radial-gradient(circle, #daa520 0%, #ffd700 50%, transparent 100%);
+}
+
+.collect-effect-green {
+    background: radial-gradient(circle, #00ff00 0%, #00cc00 50%, transparent 100%);
+}
+
+.collect-effect-blue {
+    background: radial-gradient(circle, #1e90ff 0%, #0000ff 50%, transparent 100%);
+}
+
+.collect-effect-purple {
+    background: radial-gradient(circle, #9370db 0%, #8a2be2 50%, transparent 100%);
+}
+
+@keyframes collectExpand {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Ensure collectibles are properly sized on mobile */
+@media (max-width: 768px) {
+    .collectible {
+        transform-origin: center center;
+    }
+}

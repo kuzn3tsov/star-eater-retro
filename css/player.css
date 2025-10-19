@@ -1,0 +1,155 @@
+#player-avatar {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
+  z-index: 1000;
+  left: 100px;
+  top: 100px;
+  transform-origin: center center !important;
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+#player-avatar svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform-origin: center center !important;
+}
+
+/* Consolidated transform-origin for all player elements */
+#player-avatar,
+#player-avatar *,
+#player-avatar svg {
+  transform-origin: center center !important;
+}
+
+/* Player state colors - these should only affect colors/filters, not transform */
+.player-normal {
+  color: #daa520;
+  filter: drop-shadow(0 0 10px #daa520);
+}
+
+.player-damage {
+  color: #ff4444;
+  filter: drop-shadow(0 0 15px #ff4444);
+  animation: damageFlash 0.2s ease-in-out infinite;
+}
+
+.player-power {
+  color: #1e90ff;
+  filter: drop-shadow(0 0 15px #1e90ff) drop-shadow(0 0 25px #1e90ff);
+  animation: powerGlow 1s ease-in-out infinite;
+}
+
+.player-shield {
+  color: #00ff00;
+  filter: drop-shadow(0 0 20px #00ff00) drop-shadow(0 0 30px #00ff00);
+  animation: playerShieldPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes damageFlash {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes powerGlow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 15px #1e90ff) drop-shadow(0 0 25px #1e90ff);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 20px #1e90ff) drop-shadow(0 0 35px #1e90ff);
+  }
+}
+
+/* Renamed to avoid conflict with powerups.css */
+@keyframes playerShieldPulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 20px #00ff00) drop-shadow(0 0 30px #00ff00);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 25px #00ff00) drop-shadow(0 0 40px #00ff00);
+  }
+}
+
+/* Thrust particles */
+.thrust-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff6b00 0%, #ff4444 100%);
+  pointer-events: none;
+  z-index: 900;
+  width: 8px;
+  height: 8px;
+  animation: thrustFade 0.5s ease-out forwards;
+  transform: none !important;
+}
+
+@keyframes thrustFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+/* Player freeze effect */
+.player-freeze {
+  filter: hue-rotate(180deg) drop-shadow(0 0 15px #00ffff);
+  animation: freezePulse 1s ease-in-out infinite;
+}
+
+@keyframes freezePulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive player sizes */
+@media (max-width: 768px) {
+  #player-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .thrust-particle {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  #player-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .thrust-particle {
+    width: 4px;
+    height: 4px;
+  }
+}

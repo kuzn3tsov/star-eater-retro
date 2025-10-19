@@ -1,0 +1,402 @@
+/* Boss specific styles */
+.boss-entity {
+    position: absolute;
+    z-index: 980;
+    filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    animation: bossFloat 3s ease-in-out infinite;
+}
+
+.boss-health-bar {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 25px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 990;
+}
+
+.boss-health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff4444, #ffff00, #00ff00);
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+
+.boss-health-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    text-shadow: 0 0 3px #000;
+}
+
+/* Boss animations */
+@keyframes bossFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes bossSpawn {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.2) rotate(0deg);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes bossDeath {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+/* Boss damage effects */
+.boss-damage {
+    animation: bossDamageFlash 0.2s ease-out;
+}
+
+@keyframes bossDamageFlash {
+    0% {
+        filter: brightness(3) drop-shadow(0 0 30px #ffffff);
+    }
+
+    100% {
+        filter: brightness(1) drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    }
+}
+
+/* Phase transition effects */
+.boss-phase-transition {
+    animation: phaseTransition 1s ease-in-out;
+}
+
+@keyframes phaseTransition {
+
+    0%,
+    100% {
+        filter: hue-rotate(0deg) brightness(1);
+    }
+
+    50% {
+        filter: hue-rotate(180deg) brightness(1.5);
+    }
+}
+
+/* Bomb warning effects */
+.bomb-warning {
+    position: absolute;
+    border: 2px dashed #00ffff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 930;
+    animation: bombWarningPulse 3s ease-out forwards;
+}
+
+@keyframes bombWarningPulse {
+    0% {
+        opacity: 0.3;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.2);
+    }
+}
+
+/* Toxic cloud effects */
+.toxic-cloud {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 940;
+    animation: toxicPulse 2s ease-in-out infinite;
+}
+
+@keyframes toxicPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+/* Boss specific variants - Fixed without composes */
+.boss-meteor-commander {
+    position: absolute;
+    z-index: 980;
+    filter: drop-shadow(0 0 15px #8b4513) drop-shadow(0 0 25px #8b4513);
+    animation: bossFloat 3s ease-in-out infinite;
+    color: #8b4513;
+}
+
+.boss-skull-reaper {
+    position: absolute;
+    z-index: 980;
+    filter: drop-shadow(0 0 15px #ff4444) drop-shadow(0 0 25px #ff4444);
+    animation: bossFloat 3s ease-in-out infinite;
+    color: #ff4444;
+}
+
+.boss-the-machine {
+    position: absolute;
+    z-index: 980;
+    filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px #00ffff);
+    animation: machineHum 2s ease-in-out infinite;
+    color: #00ffff;
+}
+
+@keyframes machineHum {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px #00ffff) hue-rotate(0deg);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 20px #00ffff) drop-shadow(0 0 35px #00ffff) hue-rotate(180deg);
+    }
+}
+
+.boss-biohazard-titan {
+    position: absolute;
+    z-index: 980;
+    filter: drop-shadow(0 0 15px #00ff00) drop-shadow(0 0 25px #00ff00);
+    animation: bioPulse 1.5s ease-in-out infinite;
+    color: #00ff00;
+}
+
+@keyframes bioPulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 15px #00ff00) drop-shadow(0 0 25px #00ff00) brightness(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 20px #00ff00) drop-shadow(0 0 35px #00ff00) brightness(1.3);
+    }
+}
+
+.boss-cosmic-horror {
+    position: absolute;
+    z-index: 980;
+    filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #ff00ff);
+    animation: cosmicFloat 4s ease-in-out infinite;
+    color: #ff00ff;
+}
+
+@keyframes cosmicFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #ff00ff) hue-rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-15px) rotate(5deg);
+        filter: drop-shadow(0 0 25px #ff00ff) drop-shadow(0 0 50px #ff00ff) hue-rotate(120deg);
+    }
+
+    66% {
+        transform: translateY(5px) rotate(-5deg);
+        filter: drop-shadow(0 0 25px #ff00ff) drop-shadow(0 0 50px #ff00ff) hue-rotate(240deg);
+    }
+}
+
+/* Phase indicators */
+.phase-indicator {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    text-shadow: 0 0 5px #000;
+    z-index: 990;
+}
+
+.phase-1 {
+    color: #00ff00;
+}
+
+.phase-2 {
+    color: #ffff00;
+}
+
+.phase-3 {
+    color: #ff4444;
+}
+
+/* Boss spawn portal */
+.boss-spawn-portal {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 20%, currentColor 80%);
+    animation: bossSpawnPortal 1.5s ease-out forwards;
+    pointer-events: none;
+    z-index: 975;
+}
+
+@keyframes bossSpawnPortal {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Boss defeat explosion */
+.boss-defeat-explosion {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, currentColor 0%, transparent 70%);
+    animation: bossExplode 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 985;
+}
+
+@keyframes bossExplode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(3);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(5);
+        opacity: 0;
+    }
+}
+
+/* Responsive boss sizes */
+@media (max-width: 768px) {
+    .boss-entity {
+        transform: scale(0.8);
+    }
+
+    .boss-health-bar {
+        width: 250px;
+        height: 20px;
+    }
+
+    .boss-meteor-commander,
+    .boss-skull-reaper,
+    .boss-the-machine,
+    .boss-biohazard-titan,
+    .boss-cosmic-horror {
+        transform: scale(0.8);
+    }
+}
+
+@media (max-width: 480px) {
+    .boss-entity {
+        transform: scale(0.7);
+    }
+
+    .boss-health-bar {
+        width: 200px;
+        height: 18px;
+    }
+
+    .phase-indicator {
+        font-size: 10px;
+    }
+
+    .boss-meteor-commander,
+    .boss-skull-reaper,
+    .boss-the-machine,
+    .boss-biohazard-titan,
+    .boss-cosmic-horror {
+        transform: scale(0.7);
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .boss-health-bar {
+        border: 3px solid #ffffff;
+    }
+
+    .bomb-warning {
+        border: 3px dashed #00ffff;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    .boss-entity,
+    .boss-meteor-commander,
+    .boss-skull-reaper,
+    .boss-the-machine,
+    .boss-biohazard-titan,
+    .boss-cosmic-horror {
+        animation: none;
+    }
+
+    .bomb-warning,
+    .toxic-cloud,
+    .boss-spawn-portal,
+    .boss-defeat-explosion {
+        animation: none;
+        opacity: 0.7;
+    }
+}
