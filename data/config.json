@@ -1,0 +1,133 @@
+{
+  "player": {
+    "startingLives": 3,
+    "startingLevel": 1
+  },
+  "collectables": {
+    "goldStar": {
+      "spawnStartLevel": 1,
+      "maxSpawned": 5,
+      "spawnFrequency": 1,
+      "duration": 10,
+      "points": 2
+    },
+    "greenStar": {
+      "spawnStartLevel": 4,
+      "maxSpawned": 2,
+      "spawnFrequency": 1,
+      "duration": 8,
+      "freezeDuration": 3,
+      "points": 1
+    },
+    "blueStar": {
+      "spawnStartLevel": 10,
+      "maxSpawned": 5,
+      "spawnFrequency": 5,
+      "duration": 10,
+      "starPowerDuration": 10,
+      "points": 5
+    },
+    "purpleStar": {
+      "spawnStartLevel": 15,
+      "maxSpawned": 1,
+      "spawnFrequency": 1,
+      "duration": 6,
+      "points": 1,
+      "comboRequirement": 5
+    },
+    "redRocket": {
+      "spawnStartLevel": 13,
+      "maxSpawned": 2,
+      "spawnFrequency": 3,
+      "duration": 12,
+      "extraLives": 1
+    },
+    "azureBomb": {
+      "spawnStartLevel": 15,
+      "maxSpawned": 3,
+      "spawnFrequency": 1,
+      "duration": 8,
+      "bossDamage": 1
+    }
+  },
+  "powerups": {
+    "shield": {
+      "availableFromLevel": 31,
+      "rechargeTime": 30,
+      "duration": 10,
+      "freezeDuration": 2
+    },
+    "ionPulse": {
+      "availableFromLevel": 46,
+      "rechargeTime": 25,
+      "damage": 1,
+      "radius": 225
+    },
+    "radar": {
+      "availableFromLevel": 16,
+      "rechargeTime": 45,
+      "bombWarningTime": 3,
+      "duration": 5
+    },
+    "starPower": {
+      "availableFromLevel": 1,
+      "duration": 10
+    }
+  },
+  "extendedPower": {
+    "radarBoost": {
+      "bombWarningTime": 5
+    },
+    "shieldBoost": {
+      "duration": 15,
+      "freezeDuration": 3,
+      "cooldown": 25
+    },
+    "ionPulseBoost": {
+      "cooldown": 20,
+      "damage": 2,
+      "radius": 300
+    }
+  },
+  "enemies": {
+    "respawnCooldown": 30,
+    "levelPattern": [3, 6, 10, 3, 6, 10, 3, 4, 6, 10],
+    "bossLevels": [15, 30, 45, 60, 75]
+  },
+  "gameProgression": {
+    "starsPerLevel": 10,
+    "maxLevel": 75
+  },
+  "bosses": {
+    "meteorCommander": {
+      "level": 15,
+      "health": 20,
+      "attackCooldown": 2.0,
+      "reward": "radar"
+    },
+    "skullReaper": {
+      "level": 30,
+      "health": 50,
+      "attackCooldown": 1.8,
+      "reward": "shield"
+    },
+    "theMachine": {
+      "level": 45,
+      "health": 100,
+      "attackCooldown": 1.5,
+      "reward": "ionPulse"
+    },
+    "biohazardTitan": {
+      "level": 60,
+      "health": 200,
+      "attackCooldown": 1.2,
+      "reward": "extendedPower"
+    },
+    "cosmicHorror": {
+      "level": 75,
+      "health": 500,
+      "attackCooldown": 0.8,
+      "reward": "endlessMode"
+    }
+  }
+}

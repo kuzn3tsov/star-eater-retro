@@ -1,22 +1,32 @@
 export class UIManager {
-    constructor(game) {
+    constructor(game, powerUpStateManager) {
         this.game = game;
-        this.powerUpStates = {
-            shield: { unlocked: true, cooldownDuration: 30 },
-            ionPulse: { unlocked: true, cooldownDuration: 25 },
-            radar: { unlocked: false, cooldownDuration: 45 },
-            starPower: { unlocked: true, cooldownDuration: 10 } // Blue star power
-        };
+        this.config = game.config;
+        this.powerUpStateManager = powerUpStateManager;
+
         this.iconCache = new Map();
         this.blinkTimers = new Map();
-        this.cooldownTimers = new Map(); // Track cooldown timer elements
-        this.activePowerTimers = new Map(); // Track active power duration timers
+        this.cooldownTimers = new Map();
+        this.activePowerTimers = new Map();
+        this.updateIntervals = new Map();
+
+        // Subscribe to power-up state changes
+        if (this.powerUpStateManager) {
+            this.powerUpStateManager.subscribe((type, state) => this.onPowerUpStateChange(type, state));
+        }
+    }
+
+    onPowerUpStateChange(type, state) {
+        this.updatePowerUpIcon(type);
     }
 
     async initialize() {
+        console.log('UIManager initialize called');
         await this.loadIcons();
         this.setupPowerUpIcons();
         this.updateHUD();
+        this.startPowerUpSync();
+        console.log('UIManager initialize completed');
     }
 
     async loadIcons() {
@@ -54,7 +64,8 @@ export class UIManager {
             'shield': '#00ff00',
             'ion-pulse': '#00ffff',
             'radar': '#ffa500',
-            'star-power': '#1e90ff'
+            'star-power': '#1e90ff',
+            'endless': '#ff4444'
         };
         const color = colors[name] || '#daa520';
         return `
@@ -75,7 +86,8 @@ export class UIManager {
             { id: 'shield', type: 'shield', title: 'Shield (Q) - 30s cooldown', color: '#00ff00' },
             { id: 'ionPulse', type: 'ionPulse', title: 'Ion Pulse (E) - 25s cooldown', color: '#00ffff' },
             { id: 'radar', type: 'radar', title: 'Radar (R) - 45s cooldown', color: '#ffa500' },
-            { id: 'starPower', type: 'starPower', title: 'Star Power - Invincibility', color: '#1e90ff' }
+            { id: 'starPower', type: 'starPower', title: 'Star Power - Invincibility', color: '#1e90ff' },
+            { id: 'endlessMode', type: 'endlessMode', title: 'Endless Mode', color: '#ff4444' }
         ];
 
         powerUps.forEach(powerUp => {
@@ -88,58 +100,57 @@ export class UIManager {
             icon.id = powerUp.id;
             icon.className = 'powerup-icon';
             const iconName = powerUp.type === 'ionPulse' ? 'ion-pulse' :
-                powerUp.type === 'starPower' ? 'star-power' : powerUp.type;
+                powerUp.type === 'starPower' ? 'star-power' :
+                    powerUp.type === 'endlessMode' ? 'endless' : powerUp.type;
             icon.innerHTML = this.iconCache.get(iconName) || this.createFallbackIcon(iconName);
             icon.title = powerUp.title;
 
-            // Create cooldown timer element (top-right for cooldowns)
             const cooldownTimer = document.createElement('div');
             cooldownTimer.className = 'cooldown-timer';
             cooldownTimer.id = `${powerUp.id}-timer`;
             cooldownTimer.style.cssText = `
-            position: absolute;
-            top: -12px;
-            right: -12px;
-            background: ${powerUp.color};
-            color: #000;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            font-size: 8px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 5px ${powerUp.color};
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 1001;
-        `;
+                position: absolute;
+                top: -12px;
+                right: -12px;
+                background: ${powerUp.color};
+                color: #000;
+                border-radius: 50%;
+                width: 16px;
+                height: 16px;
+                font-size: 8px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 0 5px ${powerUp.color};
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 1001;
+            `;
 
-            // Create active duration timer (top-right, below cooldown timer)
             const activeTimer = document.createElement('div');
             activeTimer.className = 'active-timer';
             activeTimer.id = `${powerUp.id}-active-timer`;
             activeTimer.style.cssText = `
-            position: absolute;
-            top: -4px;
-            right: -12px;
-            background: ${powerUp.color};
-            color: #000;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            font-size: 8px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 5px ${powerUp.color};
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 1001;
-            white-space: nowrap;
-        `;
+                position: absolute;
+                top: -4px;
+                right: -12px;
+                background: ${powerUp.color};
+                color: #000;
+                border-radius: 50%;
+                width: 16px;
+                height: 16px;
+                font-size: 8px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 0 5px ${powerUp.color};
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 1001;
+                white-space: nowrap;
+            `;
 
             iconContainer.appendChild(icon);
             iconContainer.appendChild(cooldownTimer);
@@ -149,82 +160,60 @@ export class UIManager {
             this.cooldownTimers.set(powerUp.type, cooldownTimer);
             this.activePowerTimers.set(powerUp.type, activeTimer);
 
-            this.safeUpdatePowerUpIcon(powerUp.type);
+            // Call updatePowerUpIcon method
+            this.updatePowerUpIcon(powerUp.type);
         });
     }
 
+    startPowerUpSync() {
+        this.stopPowerUpSync();
 
-    // Safe method to update power-up icons that handles missing states
-    safeUpdatePowerUpIcon(powerUpType) {
-        try {
-            this.updatePowerUpIcon(powerUpType);
-        } catch (error) {
-            console.warn(`Error updating ${powerUpType} icon:`, error);
-            // Set default state for the icon
-            const icon = document.getElementById(powerUpType);
-            if (icon) {
-                icon.style.opacity = '0.3';
-                icon.style.filter = 'none';
+        const syncInterval = setInterval(() => {
+            this.syncPowerUpStates();
+        }, 100);
+
+        this.updateIntervals.set('sync', syncInterval);
+    }
+
+    stopPowerUpSync() {
+        this.updateIntervals.forEach(interval => clearInterval(interval));
+        this.updateIntervals.clear();
+    }
+
+    syncPowerUpStates() {
+        if (!this.game.powerups) return;
+
+        // Get states from power-up state manager
+        ['shield', 'ionPulse', 'radar', 'starPower', 'endlessMode'].forEach(type => {
+            if (this.powerUpStateManager) {
+                const state = this.powerUpStateManager.getState(type);
+                if (state) {
+                    this.updatePowerUpIcon(type);
+                }
             }
+        });
+
+        // Sync star power with player state
+        if (this.game.player) {
+            const isActive = this.game.player.starPowerTime > 0;
+            this.updateActiveTimer('starPower', isActive ? this.game.player.starPowerTime : 0);
         }
     }
 
-    updatePowerUpState(powerUpType, state) {
-        if (this.powerUpStates[powerUpType]) {
-            Object.assign(this.powerUpStates[powerUpType], state);
-            this.safeUpdatePowerUpIcon(powerUpType);
-        }
-    }
-
-    unlockPowerUp(powerUpType) {
-        if (this.powerUpStates[powerUpType]) {
-            this.powerUpStates[powerUpType].unlocked = true;
-            this.safeUpdatePowerUpIcon(powerUpType);
-        }
+    updateAllPowerUpIcons() {
+        ['shield', 'ionPulse', 'radar', 'starPower', 'endlessMode'].forEach(type => {
+            this.updatePowerUpIcon(type);
+        });
     }
 
     updatePowerUpIcon(powerUpType) {
-        // Get the actual state from power-up manager and player
-        let actualCooldown = 0;
-        let actualActive = false;
-        let activeDuration = 0;
+        if (!this.powerUpStateManager) return;
 
-        if (this.game.powerups) {
-            switch (powerUpType) {
-                case 'shield':
-                    actualCooldown = this.game.powerups.shieldCooldown || 0;
-                    actualActive = this.game.powerups.shieldActive || false;
-                    break;
-                case 'ionPulse':
-                    actualCooldown = this.game.powerups.ionPulseCooldown || 0;
-                    actualActive = false; // Ion pulse is instant activation
-                    break;
-                case 'radar':
-                    actualCooldown = this.game.powerups.radarCooldown || 0;
-                    actualActive = this.game.powerups.radarActive || false;
-                    break;
-                case 'starPower':
-                    // Star power duration comes from player's starPowerTime
-                    activeDuration = this.game.player ? this.game.player.starPowerTime : 0;
-                    actualActive = activeDuration > 0;
-                    break;
-            }
-        }
-
-        // Get UI state with fallbacks
-        const uiState = this.powerUpStates[powerUpType];
-        if (!uiState) {
-            console.warn(`No UI state found for power-up: ${powerUpType}`);
+        const state = this.powerUpStateManager.getState(powerUpType);
+        if (!state) {
+            console.warn(`No state found for power-up: ${powerUpType}`);
             return;
         }
-
-        const state = {
-            cooldown: actualCooldown,
-            active: actualActive,
-            duration: activeDuration,
-            unlocked: uiState.unlocked || false,
-            cooldownDuration: uiState.cooldownDuration || 30
-        };
 
         const icon = document.getElementById(powerUpType);
         if (!icon) {
@@ -232,36 +221,33 @@ export class UIManager {
             return;
         }
 
-        // Update cooldown timer (for abilities on cooldown)
-        this.updateCooldownTimer(powerUpType, actualCooldown);
-
-        // Update active timer (for powers with duration like star power)
-        if (powerUpType === 'starPower') {
-            this.updateActiveTimer(powerUpType, activeDuration);
-        }
-
-        // Remove all state classes
-        icon.classList.remove('active', 'cooldown', 'blink', 'ready-glow');
-
-        if (!state.unlocked) {
+        if (state.unlocked) {
+            icon.classList.add('unlocked');
+        } else {
+            icon.classList.remove('unlocked', 'active', 'cooldown', 'blink', 'ready-glow');
             icon.style.opacity = '0.3';
             icon.style.filter = 'none';
             return;
         }
 
-        // If currently blinking, keep that state
+        this.updateCooldownTimer(powerUpType, state.cooldown || 0);
+
+        if (powerUpType === 'starPower') {
+            this.updateActiveTimer('starPower', state.duration || 0);
+        }
+
+        icon.classList.remove('active', 'cooldown', 'blink', 'ready-glow');
+
         if (icon.classList.contains('blink')) {
             icon.style.opacity = '1';
             return;
         }
 
         if (state.cooldown > 0) {
-            // On cooldown - dimmed
             icon.classList.add('cooldown');
             icon.style.opacity = '0.3';
             icon.style.filter = 'none';
-        } else if (state.active || state.duration > 0) {
-            // Currently active - full brightness with specific glow
+        } else if (state.active && state.duration > 0) {
             icon.classList.add('active');
             icon.style.opacity = '1';
 
@@ -269,21 +255,36 @@ export class UIManager {
                 'shield': '#00ff00',
                 'ionPulse': '#00ffff',
                 'radar': '#ffa500',
-                'starPower': '#1e90ff'
+                'starPower': '#1e90ff',
+                'endlessMode': '#ff4444'
             };
             icon.style.filter = `drop-shadow(0 0 8px ${glowColors[powerUpType] || '#00ff00'})`;
         } else {
-            // Ready to use - add glow
-            icon.classList.add('ready-glow');
-            icon.style.opacity = '1';
+            // Star power should be DIM (opacity 0.3) when not active
+            if (powerUpType === 'starPower') {
+                icon.style.opacity = '0.3'; // Changed from 1 to 0.3
+                icon.style.filter = 'none';
+                icon.classList.remove('ready-glow');
+            } else {
+                // Other power-ups get subtle glow when ready
+                icon.classList.add('ready-glow');
+                icon.style.opacity = '1';
 
-            const readyGlowColors = {
-                'shield': 'var(--neon-cyan)',
-                'ionPulse': '#00ffff',
-                'radar': '#ffa500',
-                'starPower': '#1e90ff'
-            };
-            icon.style.filter = `drop-shadow(0 0 5px ${readyGlowColors[powerUpType] || 'var(--neon-cyan)'})`;
+                const readyGlowColors = {
+                    'shield': 'var(--neon-cyan)',
+                    'ionPulse': '#00ffff',
+                    'radar': '#ffa500',
+                    'starPower': '#1e90ff',
+                    'endlessMode': '#ff4444'
+                };
+                icon.style.filter = `drop-shadow(0 0 3px ${readyGlowColors[powerUpType] || 'var(--neon-cyan)'})`;
+            }
+        }
+
+        if (powerUpType === 'starPower' && state.active && state.duration > 0) {
+            icon.classList.add('blue-star-active');
+        } else {
+            icon.classList.remove('blue-star-active');
         }
     }
 
@@ -292,18 +293,15 @@ export class UIManager {
         if (!timer) return;
 
         if (cooldown > 0) {
-            // Show timer with countdown
             timer.textContent = Math.ceil(cooldown).toString();
             timer.style.opacity = '1';
 
-            // Add pulse animation for low cooldown
             if (cooldown < 3) {
                 timer.style.animation = 'pulse 0.5s infinite';
             } else {
                 timer.style.animation = 'none';
             }
         } else {
-            // Hide timer
             timer.style.opacity = '0';
             timer.style.animation = 'none';
         }
@@ -314,59 +312,48 @@ export class UIManager {
         if (!timer) return;
 
         if (duration > 0) {
-            // Show active duration timer (just the number, no "s")
             timer.textContent = Math.ceil(duration).toString();
             timer.style.opacity = '1';
 
-            // Add pulse animation for low duration
             if (duration < 3) {
                 timer.style.animation = 'pulse 0.5s infinite';
             } else {
                 timer.style.animation = 'none';
             }
         } else {
-            // Hide timer
             timer.style.opacity = '0';
             timer.style.animation = 'none';
         }
     }
 
-    startCooldown(powerUpType) {
-        // This method is called when a power-up is activated
-        // The actual cooldown is managed by PowerUpManager
-        // We just need to ensure the UI reflects the current state
-        this.safeUpdatePowerUpIcon(powerUpType);
+    updatePowerUpState(powerUpType, state) {
+        // This method is now handled by the state manager subscription
+        this.updatePowerUpIcon(powerUpType);
+    }
 
-        // Set up a check for when cooldown finishes
-        this.checkForCooldownFinish(powerUpType);
+    unlockPowerUp(powerUpType) {
+        // This method is now handled by the state manager subscription
+        this.updatePowerUpIcon(powerUpType);
+    }
+
+    startCooldown(powerUpType) {
+        this.updatePowerUpIcon(powerUpType);
     }
 
     checkForCooldownFinish(powerUpType) {
         const checkInterval = setInterval(() => {
-            let currentCooldown = 0;
-
-            if (this.game.powerups) {
-                switch (powerUpType) {
-                    case 'shield':
-                        currentCooldown = this.game.powerups.shieldCooldown || 0;
-                        break;
-                    case 'ionPulse':
-                        currentCooldown = this.game.powerups.ionPulseCooldown || 0;
-                        break;
-                    case 'radar':
-                        currentCooldown = this.game.powerups.radarCooldown || 0;
-                        break;
-                    case 'starPower':
-                        // Star power doesn't have cooldown, it's duration-based
-                        clearInterval(checkInterval);
-                        return;
-                }
+            if (!this.powerUpStateManager) {
+                clearInterval(checkInterval);
+                return;
             }
 
-            // Update timer display
-            this.updateCooldownTimer(powerUpType, currentCooldown);
+            const state = this.powerUpStateManager.getState(powerUpType);
+            if (!state) {
+                clearInterval(checkInterval);
+                return;
+            }
 
-            if (currentCooldown <= 0) {
+            if (state.cooldown <= 0) {
                 clearInterval(checkInterval);
                 this.startReadyBlink(powerUpType);
             }
@@ -375,25 +362,19 @@ export class UIManager {
 
     startReadyBlink(powerUpType) {
         const icon = document.getElementById(powerUpType);
-        if (!icon) {
-            console.warn(`Icon not found for blink: ${powerUpType}`);
-            return;
-        }
+        if (!icon) return;
 
-        // Clear any existing blink timer for this power-up
         if (this.blinkTimers.has(powerUpType)) {
             clearTimeout(this.blinkTimers.get(powerUpType));
         }
 
-        // Remove all state classes and add blink
         icon.classList.remove('active', 'cooldown', 'ready-glow');
         icon.classList.add('blink');
         icon.style.opacity = '1';
 
-        // Set timer to remove blink after 3 seconds
         const blinkTimer = setTimeout(() => {
             icon.classList.remove('blink');
-            this.safeUpdatePowerUpIcon(powerUpType);
+            this.updatePowerUpIcon(powerUpType);
             this.blinkTimers.delete(powerUpType);
         }, 3000);
 
@@ -401,42 +382,25 @@ export class UIManager {
     }
 
     activatePowerUp(powerUpType, duration = 0) {
-        // For power-ups with duration (like shield), show active state
         if (duration > 0) {
             const icon = document.getElementById(powerUpType);
             if (icon) {
                 icon.classList.add('active');
-                this.safeUpdatePowerUpIcon(powerUpType);
+                this.updatePowerUpIcon(powerUpType);
 
                 setTimeout(() => {
-                    this.safeUpdatePowerUpIcon(powerUpType);
+                    this.updatePowerUpIcon(powerUpType);
                 }, duration * 1000);
             }
         }
     }
 
-    // Special method for star power activation
     activateStarPower(duration) {
         const icon = document.getElementById('starPower');
         if (icon) {
             icon.classList.add('active');
-            this.safeUpdatePowerUpIcon('starPower');
-
-            // Start duration countdown
-            this.startStarPowerCountdown(duration);
+            this.updatePowerUpIcon('starPower');
         }
-    }
-
-    startStarPowerCountdown(duration) {
-        const checkInterval = setInterval(() => {
-            const remainingTime = this.game.player ? this.game.player.starPowerTime : 0;
-            this.updateActiveTimer('starPower', remainingTime);
-
-            if (remainingTime <= 0) {
-                clearInterval(checkInterval);
-                this.safeUpdatePowerUpIcon('starPower');
-            }
-        }, 100);
     }
 
     updateHUD() {
@@ -468,13 +432,12 @@ export class UIManager {
 
     update(deltaTime) {
         this.updateHUD();
+        this.syncPowerUpStates();
+    }
 
-        // Update power-up icons every frame to reflect current state
-        if (this.game.powerups && this.game.player) {
-            this.safeUpdatePowerUpIcon('shield');
-            this.safeUpdatePowerUpIcon('ionPulse');
-            this.safeUpdatePowerUpIcon('radar');
-            this.safeUpdatePowerUpIcon('starPower'); // Update star power with player's duration
-        }
+    destroy() {
+        this.stopPowerUpSync();
+        this.blinkTimers.forEach(timer => clearTimeout(timer));
+        this.blinkTimers.clear();
     }
 }

@@ -70,7 +70,6 @@ body {
     color: var(--neon-gold);
 }
 
-/* HUD ICON STYLES */
 .hud-icon,
 .status-icon {
     width: 20px;
@@ -79,7 +78,6 @@ body {
     filter: drop-shadow(0 0 3px var(--neon-cyan));
 }
 
-/* Ensure all SVG icons in HUD are properly sized */
 .hud-icon svg,
 .status-icon svg {
     width: 100% !important;
@@ -133,7 +131,15 @@ body {
     flex-shrink: 0;
 }
 
-/* Ensure power-up SVGs are properly sized */
+.powerup-icon:not(.unlocked) {
+    opacity: 0.3 !important;
+    filter: none !important;
+}
+
+.powerup-icon.unlocked {
+    opacity: 1;
+}
+
 .powerup-icon svg {
     width: 100% !important;
     height: 100% !important;
@@ -161,25 +167,44 @@ body {
     opacity: 1 !important;
 }
 
-/* Consistent styling for all power-ups */
-#shield.active:not(.cooldown) {
+#shield.unlocked.active:not(.cooldown) {
     filter: drop-shadow(0 0 8px var(--powerup-shield)) drop-shadow(0 0 15px var(--powerup-shield));
     animation: powerupActive 2s ease-in-out infinite;
 }
 
-#ionPulse.active:not(.cooldown) {
+#ionPulse.unlocked.active:not(.cooldown) {
     filter: drop-shadow(0 0 8px var(--powerup-ion)) drop-shadow(0 0 15px var(--powerup-ion));
     animation: powerupActive 2s ease-in-out infinite;
 }
 
-#radar.active:not(.cooldown) {
+#radar.unlocked.active:not(.cooldown) {
     filter: drop-shadow(0 0 8px var(--powerup-radar)) drop-shadow(0 0 15px var(--powerup-radar));
     animation: powerupActive 2s ease-in-out infinite;
 }
 
-#starPower.active:not(.cooldown) {
+#starPower.unlocked:not(.active) {
+    filter: drop-shadow(0 0 3px var(--powerup-starpower));
+}
+
+#starPower.unlocked.active:not(.cooldown) {
     filter: drop-shadow(0 0 8px var(--powerup-starpower)) drop-shadow(0 0 15px var(--powerup-starpower));
     animation: powerupActive 2s ease-in-out infinite;
+}
+/* Star Power specific states - NO GLOW when not active */
+#starPower.unlocked:not(.active):not(.cooldown):not(.blink) {
+    filter: none !important;
+    opacity: 0.3 !important;
+}
+
+#starPower.unlocked.ready-glow:not(.active):not(.cooldown) {
+    filter: none !important;
+    opacity: 0.3 !important;
+}
+
+#starPower.unlocked.active:not(.cooldown) {
+    filter: drop-shadow(0 0 8px var(--powerup-starpower)) drop-shadow(0 0 15px var(--powerup-starpower)) !important;
+    animation: powerupActive 2s ease-in-out infinite !important;
+    opacity: 1 !important;
 }
 
 @keyframes powerupActive {
@@ -194,24 +219,58 @@ body {
     }
 }
 
-/* Ready glow states */
-#shield.ready-glow:not(.active):not(.cooldown) {
-    filter: drop-shadow(0 0 5px var(--powerup-shield));
+#shield.unlocked.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 3px var(--powerup-shield));
 }
 
-#ionPulse.ready-glow:not(.active):not(.cooldown) {
-    filter: drop-shadow(0 0 5px var(--powerup-ion));
+#ionPulse.unlocked.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 3px var(--powerup-ion));
 }
 
-#radar.ready-glow:not(.active):not(.cooldown) {
-    filter: drop-shadow(0 0 5px var(--powerup-radar));
+#radar.unlocked.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 3px var(--powerup-radar));
 }
 
-#starPower.ready-glow:not(.active):not(.cooldown) {
-    filter: drop-shadow(0 0 5px var(--powerup-starpower));
+#starPower.unlocked.ready-glow:not(.active):not(.cooldown) {
+    filter: drop-shadow(0 0 3px var(--powerup-starpower));
 }
 
-/* Blink animations with consistent styling */
+#endlessMode {
+    width: 24px;
+    height: 24px;
+    opacity: 0.3;
+    transition: opacity 0.3s, filter 0.3s;
+    position: relative;
+    flex-shrink: 0;
+}
+
+#endlessMode svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+}
+
+#endlessMode.unlocked {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px #ff4444) drop-shadow(0 0 15px #ff4444);
+    animation: endlessModeGlow 2s ease-in-out infinite;
+}
+
+@keyframes endlessModeGlow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px #ff4444) drop-shadow(0 0 15px #ff4444);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px #ff4444) drop-shadow(0 0 25px #ff4444);
+    }
+}
+
 #shield.blink {
     animation: powerup-blink 0.5s ease-in-out infinite, shield-blink 2s ease-in-out infinite;
 }
@@ -290,13 +349,10 @@ body {
     }
 }
 
-/* COOLDOWN TIMER STYLES (top-right - primary position) */
 .cooldown-timer {
     position: absolute;
     top: -12px;
-    /* Moved higher */
     right: -12px;
-    /* Moved further out */
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -312,13 +368,10 @@ body {
     font-family: 'Press Start 2P', monospace;
 }
 
-/* ACTIVE DURATION TIMER STYLES (top-right - secondary position, slightly lower) */
 .active-timer {
     position: absolute;
     top: -4px;
-    /* Positioned higher but below cooldown timer */
     right: -12px;
-    /* Moved further out */
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -335,45 +388,90 @@ body {
     white-space: nowrap;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-
-    .cooldown-timer,
-    .active-timer {
-        width: 12px;
-        height: 12px;
-        font-size: 6px;
-    }
-
-    .cooldown-timer {
-        top: -10px;
-        right: -10px;
-    }
-
-    .active-timer {
-        top: -3px;
-        right: -10px;
-    }
+#shield .cooldown-timer,
+#shield .active-timer {
+    background: var(--powerup-shield);
+    color: #000;
 }
 
-@media (max-width: 480px) {
+#ionPulse .cooldown-timer,
+#ionPulse .active-timer {
+    background: var(--powerup-ion);
+    color: #000;
+}
 
-    .cooldown-timer,
-    .active-timer {
-        width: 10px;
-        height: 10px;
-        font-size: 5px;
-    }
+#radar .cooldown-timer,
+#radar .active-timer {
+    background: var(--powerup-radar);
+    color: #000;
+}
 
-    .cooldown-timer {
-        top: -8px;
-        right: -8px;
-    }
+#starPower .cooldown-timer,
+#starPower .active-timer {
+    background: var(--powerup-starpower);
+    color: #000;
+}
 
-    .active-timer {
-        top: -2px;
-        right: -8px;
-    }
+#endlessMode .cooldown-timer,
+#endlessMode .active-timer {
+    background: #ff4444;
+    color: #fff;
+}
+
+.high-score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 4px 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.high-score-item:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.high-score-item.top-score {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: var(--neon-gold);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.score-rank {
+    font-weight: bold;
+    color: var(--neon-cyan);
+    min-width: 30px;
+}
+
+.score-name {
+    flex: 1;
+    color: white;
+    font-weight: bold;
+}
+
+.score-value {
+    color: var(--neon-gold);
+    font-weight: bold;
+    min-width: 60px;
+    text-align: right;
+}
+
+.score-date {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8em;
+    min-width: 80px;
+    text-align: right;
+}
+
+.no-scores {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    padding: 20px;
 }
 
 .controls-right {
@@ -389,6 +487,7 @@ body {
     cursor: pointer;
     transition: all 0.3s;
     flex-shrink: 0;
+    position: relative;
 }
 
 .control-btn:hover {
@@ -400,14 +499,38 @@ body {
     width: 16px;
     height: 16px;
     display: block;
+    transition: opacity 0.3s;
 }
 
-/* Ensure control button SVGs are properly sized */
 .control-btn svg {
     width: 100% !important;
     height: 100% !important;
     max-width: 100% !important;
     max-height: 100% !important;
+}
+
+.control-btn .hidden {
+    display: none !important;
+}
+
+.control-btn img:not(.hidden) {
+    display: block;
+}
+
+#play-pause-btn .hidden {
+    display: none !important;
+}
+
+#play-pause-btn img:not(.hidden) {
+    display: block;
+}
+
+#sound-btn .hidden {
+    display: none !important;
+}
+
+#sound-btn img:not(.hidden) {
+    display: block;
 }
 
 #game-container {
@@ -427,51 +550,6 @@ body {
     background: linear-gradient(135deg, var(--dark-blue), var(--near-black));
 }
 
-.high-score-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-    font-size: 12px;
-    transition: all 0.3s;
-}
-
-.high-score-item:hover {
-    background: rgba(0, 255, 255, 0.1);
-    transform: translateX(5px);
-}
-
-.high-score-item.top-score {
-    color: var(--neon-gold);
-    font-weight: bold;
-    border-bottom: 2px solid var(--neon-gold);
-}
-
-.score-rank {
-    width: 30px;
-    color: var(--neon-cyan);
-}
-
-.score-name {
-    flex: 1;
-    text-align: left;
-    color: inherit;
-}
-
-.score-value {
-    width: 80px;
-    text-align: right;
-    color: inherit;
-}
-
-.no-scores {
-    text-align: center;
-    padding: 20px;
-    color: var(--neon-cyan);
-    font-size: 12px;
-}
-
 @keyframes textFloat {
     0% {
         transform: translate(-50%, -50%) scale(1);
@@ -486,9 +564,11 @@ body {
 
 .hidden {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
-/* Star Power specific enhancements */
 .star-power-active {
     position: relative;
 }
@@ -506,6 +586,35 @@ body {
     pointer-events: none;
 }
 
+.blue-star-active {
+    position: relative;
+}
+
+.blue-star-active::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 1px solid var(--powerup-starpower);
+    border-radius: 4px;
+    animation: blueStarBorder 1s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes blueStarBorder {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px var(--powerup-starpower), inset 0 0 5px var(--powerup-starpower);
+    }
+
+    50% {
+        box-shadow: 0 0 15px var(--powerup-starpower), inset 0 0 15px var(--powerup-starpower);
+    }
+}
+
 @keyframes starPowerBorder {
 
     0%,
@@ -518,7 +627,6 @@ body {
     }
 }
 
-/* Power-up tooltip enhancements */
 .powerup-icon:hover::after {
     content: attr(title);
     position: absolute;
@@ -535,7 +643,6 @@ body {
     border: 1px solid var(--neon-cyan);
 }
 
-/* Status effect animations */
 .status-effect {
     animation: statusPulse 1s ease-in-out infinite;
 }
@@ -552,7 +659,41 @@ body {
     }
 }
 
-/* RESPONSIVE DESIGN */
+#high-scores-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 10px 0;
+    padding-right: 5px;
+}
+
+#high-scores-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#high-scores-list::-webkit-scrollbar-track {
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+#high-scores-list::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan);
+    border-radius: 3px;
+}
+
+#high-scores-list::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-gold);
+}
+
+.modal .high-score-item {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.modal .high-score-item.top-score {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: var(--neon-gold);
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
@@ -595,7 +736,7 @@ body {
     }
 
     .active-timer {
-        left: -6px;
+        right: -6px;
     }
 
     .hud {
@@ -609,6 +750,11 @@ body {
     .high-score-item {
         font-size: 10px;
         padding: 8px 0;
+    }
+
+    .score-date {
+        font-size: 0.7em;
+        min-width: 70px;
     }
 
     .powerups {
@@ -644,7 +790,7 @@ body {
     }
 
     .active-timer {
-        left: -5px;
+        right: -5px;
     }
 
     .status-left {
@@ -669,9 +815,26 @@ body {
         width: 12px;
         height: 12px;
     }
+
+    .high-score-item {
+        font-size: 9px;
+        padding: 6px 8px;
+    }
+
+    .score-date {
+        font-size: 0.6em;
+        min-width: 60px;
+    }
+
+    .score-rank {
+        min-width: 25px;
+    }
+
+    .score-value {
+        min-width: 50px;
+    }
 }
 
-/* Ensure all container elements prevent overflow */
 .hud-left,
 .hud-right,
 .status-left,
@@ -679,7 +842,6 @@ body {
     overflow: visible;
 }
 
-/* Force all images and SVGs in HUD to respect container sizing */
 #hud img,
 #hud svg {
     max-width: 100% !important;
@@ -687,7 +849,6 @@ body {
     display: block !important;
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
     .powerup-icon {
         border: 1px solid currentColor;
@@ -697,9 +858,12 @@ body {
     .active-timer {
         border: 1px solid #000;
     }
+
+    .high-score-item {
+        border: 2px solid currentColor;
+    }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
 
     .powerup-icon.blink,
@@ -712,9 +876,12 @@ body {
     .powerup-icon {
         transition: none;
     }
+
+    .high-score-item:hover {
+        transform: none;
+    }
 }
 
-/* Dark mode enhancements */
 @media (prefers-color-scheme: dark) {
 
     .cooldown-timer,
@@ -724,7 +891,6 @@ body {
     }
 }
 
-/* Focus styles for accessibility */
 .powerup-icon:focus {
     outline: 2px solid var(--neon-cyan);
     outline-offset: 2px;
@@ -735,7 +901,6 @@ body {
     outline-offset: 2px;
 }
 
-/* Ensure no conflicting positioning */
 .powerup-container {
     position: relative !important;
 }
@@ -744,7 +909,6 @@ body {
     position: relative !important;
 }
 
-/* Clear any inherited positioning that might break the layout */
 .cooldown-timer,
 .active-timer {
     bottom: auto !important;

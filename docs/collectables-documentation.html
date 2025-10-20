@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collectables System - Star Eater Documentation</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Collectables System</h1>
+        <p class="subtitle">Stars, power-ups, and special items collection mechanics</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="./game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <!-- Rest of the file content remains the same -->
+    <div class="section">
+        <h2>Collectables Overview</h2>
+        <p>Collectables are items that spawn throughout the game world, providing score, power-ups, and special
+            abilities when collected by the player.</p>
+
+        <div class="powerups-grid">
+            <div class="powerup-card">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/collectable-gold-star.svg" alt="Gold Star">
+                    </div>
+                    <div>
+                        <h3>Gold Star</h3>
+                        <p>Basic scoring item</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Effect:</strong> +2 score, +1 star progress</p>
+                    <p><strong>Spawn Level:</strong> Level 1+</p>
+                    <p><strong>Duration:</strong> 10 seconds</p>
+                    <p><strong>Max Spawned:</strong> 5</p>
+                </div>
+            </div>
+
+            <div class="powerup-card">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/collectable-green-star.svg" alt="Green Star">
+                    </div>
+                    <div>
+                        <h3>Green Star</h3>
+                        <p>Freeze enemies</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Effect:</strong> +1 score, freeze all enemies for 3 seconds</p>
+                    <p><strong>Spawn Level:</strong> Level 4+</p>
+                    <p><strong>Duration:</strong> 8 seconds</p>
+                    <p><strong>Max Spawned:</strong> 5</p>
+                </div>
+            </div>
+
+            <div class="powerup-card">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/collectable-blue-star.svg" alt="Blue Star">
+                    </div>
+                    <div>
+                        <h3>Blue Star</h3>
+                        <p>Star Power activation</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Effect:</strong> +2 score, activate Star Power for 10 seconds</p>
+                    <p><strong>Spawn Level:</strong> Level 6+ (every 5 levels)</p>
+                    <p><strong>Duration:</strong> 10 seconds</p>
+                    <p><strong>Max Spawned:</strong> 5</p>
+                </div>
+            </div>
+
+            <div class="powerup-card">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/collectable-purple-star.svg" alt="Purple Star">
+                    </div>
+                    <div>
+                        <h3>Purple Star</h3>
+                        <p>Screen clear</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Effect:</strong> +1 score per enemy, clear all enemies</p>
+                    <p><strong>Requirement:</strong> 5+ consecutive stars</p>
+                    <p><strong>Duration:</strong> 6 seconds</p>
+                    <p><strong>Max Spawned:</strong> 1</p>
+                </div>
+            </div>
+
+            <div class="powerup-card">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/collectable-red-rocket.svg" alt="Red Rocket">
+                    </div>
+                    <div>
+                        <h3>Red Rocket</h3>
+                        <p>Extra life</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Effect:</strong> +1 life</p>
+                    <p><strong>Spawn Level:</strong> Level 13+ (every 3 levels)</p>
+                    <p><strong>Duration:</strong> 12 seconds</p>
+                    <p><strong>Max Spawned:</strong> 2</p>
+                </div>
+            </div>
+
+            <div class="powerup-card">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/collectable-azure-bomb.svg" alt="Azure Bomb">
+                    </div>
+                    <div>
+                        <h3>Azure Bomb</h3>
+                        <p>Boss damage</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Effect:</strong> Deal 1 damage to boss</p>
+                    <p><strong>Spawn Level:</strong> Boss levels only</p>
+                    <p><strong>Duration:</strong> 8 seconds</p>
+                    <p><strong>Max Spawned:</strong> 3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Spawn Mechanics</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Spawn Algorithm</h3>
+                <ul class="feature-list">
+                    <li><strong>Base Spawn Rate:</strong> Every 2.5 seconds (decreases with level)</li>
+                    <li><strong>Level Scaling:</strong> Spawn cooldown = max(0.5, 2.5 - level * 0.05)</li>
+                    <li><strong>Maximum Collectables:</strong> Based on highest maxSpawned value</li>
+                    <li><strong>Position:</strong> Random within game bounds</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Type Selection</h3>
+                <p>Collectable types are selected based on weighted probabilities that change with level progression:
+                </p>
+                <ul class="feature-list">
+                    <li><strong>Gold Star:</strong> Always available, base weight 40</li>
+                    <li><strong>Green Star:</strong> Available from level 4, weight 25</li>
+                    <li><strong>Blue Star:</strong> Available from level 6, spawns every 5 levels, weight 15</li>
+                    <li><strong>Purple Star:</strong> Requires 5+ consecutive stars, weight 20</li>
+                    <li><strong>Red Rocket:</strong> Available from level 13, spawns every 3 levels, weight 15</li>
+                    <li><strong>Azure Bomb:</strong> Boss levels only, weight 40</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Collection Effects</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Visual Feedback</h3>
+                <ul class="feature-list">
+                    <li><strong>Collection Particles:</strong> Color-coded explosion effects</li>
+                    <li><strong>Score Popups:</strong> Floating text showing points gained</li>
+                    <li><strong>Combo Effects:</strong> Special effects for consecutive collections</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Combo System</h3>
+                <ul class="feature-list">
+                    <li><strong>Consecutive Stars:</strong> Track stars collected within 3 seconds</li>
+                    <li><strong>Star Combo:</strong> Track stars collected within 2 seconds</li>
+                    <li><strong>Combo Bonus:</strong> 5+ combo gives bonus score (combo * 2)</li>
+                    <li><strong>Purple Star Trigger:</strong> 5+ consecutive stars enables purple star spawn</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Technical Implementation</h2>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                    <th>Methods</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CollectibleManager</td>
+                    <td>Manages all collectable spawning and behavior</td>
+                    <td>update(), spawnCollectible(), collect()</td>
+                </tr>
+                <tr>
+                    <td>Collection Detection</td>
+                    <td>Rectangle collision with player</td>
+                    <td>checkPlayerCollision()</td>
+                </tr>
+                <tr>
+                    <td>Effect Application</td>
+                    <td>Applies collectable effects to game state</td>
+                    <td>applyCollectibleEffect()</td>
+                </tr>
+                <tr>
+                    <td>Visual Management</td>
+                    <td>DOM element creation and updates</td>
+                    <td>createCollectibleElement(), updateCollectibleElement()</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Boss Level Adjustments</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Boss Level Behavior</h3>
+                <p>During boss fights, collectable spawn patterns change significantly:</p>
+                <ul class="feature-list">
+                    <li><strong>Azure Bomb Priority:</strong> 40% spawn weight during boss fights</li>
+                    <li><strong>Reduced Other Stars:</strong> Lower weights for non-boss collectables</li>
+                    <li><strong>Gold Star Adjustment:</strong> Reduced from 40 to 30 weight</li>
+                    <li><strong>Strategic Placement:</strong> Collectables spawn in safer areas away from boss attacks
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Star Eater Game Documentation</p>
+        <p class="timestamp">Collectables System - Last updated: 2024</p>
+    </footer>
+</body>
+
+</html>

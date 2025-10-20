@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player System - Star Eater Documentation</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Player System</h1>
+        <p class="subtitle">Player controls, movement, and visual representation</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="./game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <div class="section">
+        <h2>Player Overview</h2>
+        <p>The player is the main character controlled by the user, represented by a spaceship avatar with smooth
+            movement mechanics and visual effects.</p>
+    </div>
+
+    <div class="section">
+        <h2>Player Avatar</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Visual Representation</h3>
+                <p>The player is represented by an SVG avatar with multiple visual states:</p>
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="../assets/graphics/player-avatar.svg" alt="Player Avatar"
+                        style="width: 100px; height: 100px;">
+                </div>
+                <ul class="feature-list">
+                    <li><strong>Default State:</strong> Normal player appearance</li>
+                    <li><strong>Damage State:</strong> Red tint when taking damage</li>
+                    <li><strong>Power State:</strong> Blue glow during star power</li>
+                    <li><strong>Shield State:</strong> Green aura when shield is active</li>
+                    <li><strong>Freeze State:</strong> Cyan tint when frozen</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Movement System</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Controls</h3>
+                <ul class="feature-list">
+                    <li><strong>W/Arrow Up:</strong> Move upward</li>
+                    <li><strong>S/Arrow Down:</strong> Move downward</li>
+                    <li><strong>A/Arrow Left:</strong> Move left</li>
+                    <li><strong>D/Arrow Right:</strong> Move right</li>
+                    <li><strong>Diagonal Movement:</strong> Normalized speed (70.7% of normal)</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Movement Mechanics</h3>
+                <ul class="feature-list">
+                    <li><strong>Base Speed:</strong> 5 units per frame</li>
+                    <li><strong>Smooth Movement:</strong> 20% interpolation for fluid motion</li>
+                    <li><strong>Rotation:</strong> Ship rotates to face movement direction</li>
+                    <li><strong>Bounds Checking:</strong> Player stays within game container</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Power-up Controls</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Shield Activation</h3>
+                <ul class="feature-list">
+                    <li><strong>Key:</strong> Q</li>
+                    <li><strong>Effect:</strong> Creates protective shield around player</li>
+                    <li><strong>Duration:</strong> 10 seconds (15 with Extended Power)</li>
+                    <li><strong>Cooldown:</strong> 30 seconds (25 with Extended Power)</li>
+                    <li><strong>Additional Effects:</strong> Freezes enemies on contact for 2 seconds</li>
+                    <li><strong>Visual:</strong> Green circular shield with particle effects</li>
+                    <li><strong>Unlock:</strong> Boss 2 (Level 30)</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Ion Pulse Activation</h3>
+                <ul class="feature-list">
+                    <li><strong>Key:</strong> E</li>
+                    <li><strong>Effect:</strong> Area-of-effect damage to nearby enemies</li>
+                    <li><strong>Radius:</strong> 225px (300 with Extended Power)</li>
+                    <li><strong>Damage:</strong> 1 damage to all enemies in radius (2 with Extended Power)</li>
+                    <li><strong>Cooldown:</strong> 25 seconds (20 with Extended Power)</li>
+                    <li><strong>Visual:</strong> Blue energy pulse with shockwave effect</li>
+                    <li><strong>Unlock:</strong> Boss 3 (Level 45)</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Control Scheme Summary</h3>
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Primary Key</th>
+                            <th>Alternative Key</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Move Up</td>
+                            <td>W</td>
+                            <td>Arrow Up</td>
+                            <td>Vertical movement</td>
+                        </tr>
+                        <tr>
+                            <td>Move Down</td>
+                            <td>S</td>
+                            <td>Arrow Down</td>
+                            <td>Vertical movement</td>
+                        </tr>
+                        <tr>
+                            <td>Move Left</td>
+                            <td>A</td>
+                            <td>Arrow Left</td>
+                            <td>Horizontal movement</td>
+                        </tr>
+                        <tr>
+                            <td>Move Right</td>
+                            <td>D</td>
+                            <td>Arrow Right</td>
+                            <td>Horizontal movement</td>
+                        </tr>
+                        <tr>
+                            <td>Activate Shield</td>
+                            <td>Q</td>
+                            <td>N/A</td>
+                            <td>Defensive protection</td>
+                        </tr>
+                        <tr>
+                            <td>Activate Ion Pulse</td>
+                            <td>E</td>
+                            <td>N/A</td>
+                            <td>Area damage attack</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Visual Effects</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Thrust Particles</h3>
+                <p>Visual particles emitted from the rear of the ship during movement:</p>
+                <ul class="feature-list">
+                    <li><strong>Spawn Rate:</strong> 30% chance per frame when moving</li>
+                    <li><strong>Size:</strong> 8x8 pixels</li>
+                    <li><strong>Lifetime:</strong> 0.3-0.5 seconds</li>
+                    <li><strong>Movement:</strong> Opposite direction of travel with spread</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Damage Feedback</h3>
+                <ul class="feature-list">
+                    <li><strong>Damage Flash:</strong> 2-second red tint when hit</li>
+                    <li><strong>Screen Shake:</strong> 10px intensity on damage</li>
+                    <li><strong>Invulnerability:</strong> Brief period after taking damage</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Power-up Visuals</h3>
+                <ul class="feature-list">
+                    <li><strong>Shield Activation:</strong> Green circular shield with pulsing effect</li>
+                    <li><strong>Ion Pulse:</strong> Blue energy wave expanding from player</li>
+                    <li><strong>Star Power:</strong> Continuous blue glow around player</li>
+                    <li><strong>Freeze Effect:</strong> Cyan tint and ice particle effects</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Power-up Integration</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Star Power</h3>
+                <ul class="feature-list">
+                    <li><strong>Activation:</strong> Collecting blue stars</li>
+                    <li><strong>Duration:</strong> 10 seconds (configurable)</li>
+                    <li><strong>Effects:</strong> Invincibility, instant enemy destruction on contact</li>
+                    <li><strong>Visual:</strong> Blue glow effect</li>
+                    <li><strong>Bonus:</strong> +5 score per enemy destroyed during Star Power</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Shield Protection</h3>
+                <ul class="feature-list">
+                    <li><strong>Activation:</strong> Power-up activation (Q key)</li>
+                    <li><strong>Effects:</strong> Freezes enemies on contact, prevents damage</li>
+                    <li><strong>Visual:</strong> Green circular shield around player</li>
+                    <li><strong>Strategic Use:</strong> Can be used to create safe paths through enemy formations</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Ion Pulse</h3>
+                <ul class="feature-list">
+                    <li><strong>Activation:</strong> Power-up activation (E key)</li>
+                    <li><strong>Effects:</strong> Instant area damage, useful for clearing dense enemy groups</li>
+                    <li><strong>Strategic Use:</strong> Best used when surrounded or against clustered enemies</li>
+                    <li><strong>Boss Damage:</strong> Deals 1 damage to bosses when activated</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Technical Specifications</h2>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Width</td>
+                    <td>48px</td>
+                    <td>Player hitbox width</td>
+                </tr>
+                <tr>
+                    <td>Height</td>
+                    <td>48px</td>
+                    <td>Player hitbox height</td>
+                </tr>
+                <tr>
+                    <td>Base Speed</td>
+                    <td>5</td>
+                    <td>Movement speed multiplier</td>
+                </tr>
+                <tr>
+                    <td>Smooth Factor</td>
+                    <td>0.2</td>
+                    <td>Movement interpolation factor</td>
+                </tr>
+                <tr>
+                    <td>Rotation Speed</td>
+                    <td>0.2</td>
+                    <td>Rotation interpolation factor</td>
+                </tr>
+                <tr>
+                    <td>Shield Duration</td>
+                    <td>10s</td>
+                    <td>Base shield active time</td>
+                </tr>
+                <tr>
+                    <td>Shield Cooldown</td>
+                    <td>30s</td>
+                    <td>Base shield recharge time</td>
+                </tr>
+                <tr>
+                    <td>Ion Pulse Cooldown</td>
+                    <td>25s</td>
+                    <td>Base ion pulse recharge time</td>
+                </tr>
+                <tr>
+                    <td>Invulnerability Period</td>
+                    <td>2s</td>
+                    <td>Time after taking damage</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>Star Eater Game Documentation</p>
+        <p class="timestamp">Player System - Last updated: 2024</p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power-ups System - Star Eater Documentation</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Power-ups System</h1>
+        <p class="subtitle">Special abilities and their activation mechanics</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="./game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <!-- Rest of the file content remains the same -->
+    <div class="section">
+        <h2>Power-ups Overview</h2>
+        <p>Power-ups are special abilities that players can activate to gain temporary advantages, each with unique
+            cooldowns and effects.</p>
+
+        <div class="powerups-grid">
+            <div class="powerup-card shield">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                    </div>
+                    <div>
+                        <h3>Shield</h3>
+                        <p>Defensive protection</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Activation:</strong> Q key</p>
+                    <p><strong>Effect:</strong> Creates protective shield that freezes enemies on contact</p>
+                    <p><strong>Duration:</strong> 10 seconds (15 with Extended Power)</p>
+                    <p><strong>Cooldown:</strong> 30 seconds (25 with Extended Power)</p>
+                    <p><strong>Freeze Duration:</strong> 2 seconds (3 with Extended Power)</p>
+                    <p><strong>Unlock:</strong> Boss 2 (Level 30)</p>
+                </div>
+                <div class="state-indicators">
+                    <div class="state locked">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim shield locked">
+                                <img src="../assets/graphics/hud-player-shield.svg" alt="Shield Locked">
+                            </div>
+                        </div>
+                        <span>Locked</span>
+                    </div>
+                    <div class="state ready">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim shield ready">
+                                <img src="../assets/graphics/hud-player-shield.svg" alt="Shield Ready">
+                            </div>
+                        </div>
+                        <span>Ready</span>
+                    </div>
+                    <div class="state active">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim shield active">
+                                <img src="../assets/graphics/hud-player-shield.svg" alt="Shield Active">
+                            </div>
+                        </div>
+                        <span>Active</span>
+                    </div>
+                    <div class="state cooldown">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim shield cooldown">
+                                <img src="../assets/graphics/hud-player-shield.svg" alt="Shield Cooldown">
+                            </div>
+                        </div>
+                        <span>Cooldown</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="powerup-card ion">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse">
+                    </div>
+                    <div>
+                        <h3>Ion Pulse</h3>
+                        <p>Area damage</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Activation:</strong> E key</p>
+                    <p><strong>Effect:</strong> Damages all enemies within radius</p>
+                    <p><strong>Radius:</strong> 225px (300 with Extended Power)</p>
+                    <p><strong>Damage:</strong> 1 (2 with Extended Power)</p>
+                    <p><strong>Cooldown:</strong> 25 seconds (20 with Extended Power)</p>
+                    <p><strong>Unlock:</strong> Boss 3 (Level 45)</p>
+                </div>
+                <div class="state-indicators">
+                    <div class="state locked">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim ion locked">
+                                <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Locked">
+                            </div>
+                        </div>
+                        <span>Locked</span>
+                    </div>
+                    <div class="state ready">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim ion ready">
+                                <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Ready">
+                            </div>
+                        </div>
+                        <span>Ready</span>
+                    </div>
+                    <div class="state cooldown">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim ion cooldown">
+                                <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Cooldown">
+                            </div>
+                        </div>
+                        <span>Cooldown</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="powerup-card radar">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/hud-player-radar.svg" alt="Radar">
+                    </div>
+                    <div>
+                        <h3>Radar</h3>
+                        <p>Reveal collectables</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Activation:</strong> R key</p>
+                    <p><strong>Effect:</strong> Reveals all collectables and predicts bomb spawns</p>
+                    <p><strong>Duration:</strong> 5 seconds</p>
+                    <p><strong>Cooldown:</strong> 45 seconds</p>
+                    <p><strong>Boss Auto-activation:</strong> Levels 30, 45, 60, 75</p>
+                    <p><strong>Unlock:</strong> Boss 1 (Level 15)</p>
+                </div>
+                <div class="state-indicators">
+                    <div class="state locked">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim radar locked">
+                                <img src="../assets/graphics/hud-player-radar.svg" alt="Radar Locked">
+                            </div>
+                        </div>
+                        <span>Locked</span>
+                    </div>
+                    <div class="state ready">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim radar ready">
+                                <img src="../assets/graphics/hud-player-radar.svg" alt="Radar Ready">
+                            </div>
+                        </div>
+                        <span>Ready</span>
+                    </div>
+                    <div class="state active">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim radar active">
+                                <img src="../assets/graphics/hud-player-radar.svg" alt="Radar Active">
+                            </div>
+                        </div>
+                        <span>Active</span>
+                    </div>
+                    <div class="state cooldown">
+                        <div class="state-icon">
+                            <div class="powerup-icon-sim radar cooldown">
+                                <img src="../assets/graphics/hud-player-radar.svg" alt="Radar Cooldown">
+                            </div>
+                        </div>
+                        <span>Cooldown</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Special Power-ups</h2>
+        <div class="powerups-grid">
+            <div class="powerup-card starpower">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/hud-player-star-power.svg" alt="Star Power">
+                    </div>
+                    <div>
+                        <h3>Star Power</h3>
+                        <p>Temporary invincibility</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Activation:</strong> Collect blue stars</p>
+                    <p><strong>Effect:</strong> Invincibility, instant enemy destruction</p>
+                    <p><strong>Duration:</strong> 10 seconds</p>
+                    <p><strong>Visual:</strong> Blue player glow</p>
+                    <p><strong>Bonus:</strong> +5 score per enemy destroyed</p>
+                </div>
+            </div>
+
+            <div class="powerup-card endless">
+                <div class="powerup-header">
+                    <div class="powerup-icon-large">
+                        <img src="../assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode">
+                    </div>
+                    <div>
+                        <h3>Endless Mode</h3>
+                        <p>Infinite gameplay</p>
+                    </div>
+                </div>
+                <div class="powerup-details">
+                    <p><strong>Activation:</strong> Defeat final boss (Level 75)</p>
+                    <p><strong>Effect:</strong> Continues game indefinitely with increasing difficulty</p>
+                    <p><strong>Level:</strong> Starts at 76</p>
+                    <p><strong>Enemy Types:</strong> All enemy categories mixed randomly</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Extended Power System</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Unlock Condition</h3>
+                <p>Extended Power is unlocked by defeating Boss 4 (Biohazard Titan) at Level 60, enhancing all existing
+                    power-ups:</p>
+
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Power-up</th>
+                            <th>Base Version</th>
+                            <th>Extended Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Shield</td>
+                            <td>10s duration, 30s cooldown, 2s freeze</td>
+                            <td>15s duration, 25s cooldown, 3s freeze</td>
+                        </tr>
+                        <tr>
+                            <td>Ion Pulse</td>
+                            <td>225px radius, 1 damage, 25s cooldown</td>
+                            <td>300px radius, 2 damage, 20s cooldown</td>
+                        </tr>
+                        <tr>
+                            <td>Radar</td>
+                            <td>3s bomb warning</td>
+                            <td>5s bomb warning</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Boss Radar System</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Automatic Activation</h3>
+                <p>During specific boss fights, Radar automatically activates with enhanced behavior:</p>
+                <ul class="feature-list">
+                    <li><strong>Boss Levels:</strong> 30, 45, 60, 75</li>
+                    <li><strong>Duration:</strong> Entire boss fight (999 seconds)</li>
+                    <li><strong>Ping Frequency:</strong> Every 2 seconds</li>
+                    <li><strong>Features:</strong> Continuous collectable reveal, bomb spawn prediction</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Bomb Prediction</h3>
+                <ul class="feature-list">
+                    <li><strong>Warning Time:</strong> 3 seconds (5 with Extended Power)</li>
+                    <li><strong>Prediction:</strong> 3 potential bomb locations</li>
+                    <li><strong>Safety Check:</strong> Locations avoid player proximity</li>
+                    <li><strong>Visual:</strong> Dashed circle with countdown timer</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Technical Implementation</h2>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                    <th>Key Methods</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PowerUpManager</td>
+                    <td>Main power-up controller</td>
+                    <td>update(), activateShield(), activateIonPulse()</td>
+                </tr>
+                <tr>
+                    <td>PowerUpStateManager</td>
+                    <td>State tracking and UI synchronization</td>
+                    <td>subscribe(), activatePowerUp(), startCooldown()</td>
+                </tr>
+                <tr>
+                    <td>Visual Effects</td>
+                    <td>Power-up activation visuals</td>
+                    <td>createShieldEffect(), createIonPulseEffect()</td>
+                </tr>
+                <tr>
+                    <td>Collision Detection</td>
+                    <td>Shield enemy freezing</td>
+                    <td>checkShieldCollisions(), freezeEnemiesInRadius()</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>Star Eater Game Documentation</p>
+        <p class="timestamp">Power-ups System - Last updated: 2024</p>
+    </footer>
+</body>
+
+</html>

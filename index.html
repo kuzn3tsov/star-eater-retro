@@ -52,35 +52,43 @@
           <span id="lives">3</span>
         </div>
         <div class="powerups">
-          <img src="assets/graphics/hud-player-radar.svg" alt="Radar" id="radar-icon" class="powerup-icon hidden"
-            title="Radar">
-          <img src="assets/graphics/hud-player-shield.svg" alt="Shield" id="shield-icon" class="powerup-icon hidden"
-            title="Shield">
-          <img src="assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse" id="ion-icon" class="powerup-icon hidden"
-            title="Ion Pulse">
-          <img src="assets/graphics/hud-player-freeze.svg" alt="Freeze" id="freeze-icon" class="powerup-icon hidden"
-            title="Freeze">
-          <img src="assets/graphics/hud-player-star-power.svg" alt="Star Power" id="star-power-icon"
-            class="powerup-icon hidden" title="Star Power">
-          <img src="assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode" id="endless-icon"
-            class="powerup-icon hidden" title="Endless Mode">
+          <!-- Power-up icons will be dynamically populated by JavaScript -->
+          <div class="powerup-container">
+            <div id="shield" class="powerup-icon" title="Shield (Q) - 30s cooldown"></div>
+          </div>
+          <div class="powerup-container">
+            <div id="ionPulse" class="powerup-icon" title="Ion Pulse (E) - 25s cooldown"></div>
+          </div>
+          <div class="powerup-container">
+            <div id="radar" class="powerup-icon" title="Radar (R) - 45s cooldown"></div>
+          </div>
+          <div class="powerup-container">
+            <div id="starPower" class="powerup-icon" title="Star Power - Invincibility"></div>
+          </div>
+          <div class="powerup-container">
+            <div id="endlessMode" class="powerup-icon" title="Endless Mode"></div>
+          </div>
         </div>
       </div>
 
       <div class="controls-right">
         <button id="play-pause-btn" class="control-btn" title="Play/Pause">
-          <img src="assets/graphics/hud-controls-play.svg" alt="Play" id="play-icon">
-          <img src="assets/graphics/hud-controls-pause.svg" alt="Pause" id="pause-icon" class="hidden">
+          <img src="assets/graphics/hud-controls-play.svg" alt="Play" id="play-icon" class="hidden">
+          <img src="assets/graphics/hud-controls-pause.svg" alt="Pause" id="pause-icon">
         </button>
         <button id="restart-btn" class="control-btn" title="Restart">
           <img src="assets/graphics/hud-controls-restart.svg" alt="Restart">
         </button>
         <button id="sound-btn" class="control-btn" title="Sound On/Off">
-          <img src="assets/graphics/hud-controls-sound-on.svg" alt="Sound On" id="sound-on-icon">
-          <img src="assets/graphics/hud-controls-sound-off.svg" alt="Sound Off" id="sound-off-icon" class="hidden">
+          <img src="assets/graphics/hud-controls-sound-off.svg" alt="Sound Off" id="sound-off-icon">
+          <img src="assets/graphics/hud-controls-sound-on.svg" alt="Sound On" id="sound-on-icon"  class="hidden">
         </button>
         <button id="info-btn" class="control-btn" title="Info">
           <img src="assets/graphics/hud-controls-info.svg" alt="Info">
+        </button>
+        <button id="high-score-btn" class="control-btn" title="High Scores">
+          <!-- Use the existing highscore icon -->
+          <img src="assets/graphics/hud-top-highscore.svg" alt="High Scores">
         </button>
       </div>
     </div>
@@ -143,6 +151,7 @@
           <p>WASD - Move Ship</p>
           <p>Q - Activate Shield</p>
           <p>E - Ion Pulse</p>
+          <p>R - Radar</p>
         </div>
         <div class="info-section">
           <h3>POWER-UPS</h3>
@@ -151,6 +160,7 @@
           <p>Blue Star - Destroy on Contact</p>
           <p>Purple Star - Destroy All Enemies</p>
           <p>Red Rocket - Extra Life</p>
+          <p>Azure Bomb - Boss Damage</p>
         </div>
         <button class="modal-btn secondary" id="close-info-btn">CLOSE</button>
       </div>

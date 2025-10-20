@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Eater - Game Specification</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Star Eater - Game Specification</h1>
+        <p class="subtitle">Complete technical and design documentation</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="./game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <nav class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">1. OVERVIEW</a></li>
+            <li><a href="#technology">2. TECHNOLOGY AND ASSETS</a></li>
+            <li><a href="#file-structure">3. FILE STRUCTURE</a></li>
+            <li><a href="configuration-documentation.html">4. CONFIGURATION DOCUMENTATION</a></li>
+            <li><a href="ui-documentation.html">5. UI DOCUMENTATION</a></li>
+            <li><a href="player-documentation.html">6. PLAYER DOCUMENTATION</a></li>
+            <li><a href="collectables-documentation.html">7. COLLECTABLES DOCUMENTATION</a></li>
+            <li><a href="powerups-documentation.html">8. POWERUPS DOCUMENTATION</a></li>
+            <li><a href="enemies-documentation.html">9. ENEMIES DOCUMENTATION</a></li>
+            <li><a href="bosses-documentation.html">10. BOSSES DOCUMENTATION</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Overview Section -->
+        <section id="overview" class="section">
+            <h2>1. OVERVIEW</h2>
+
+            <div class="spec-details compact">
+                <div class="spec-item">
+                    <h3>Game Title</h3>
+                    <p><strong>Star Eater</strong></p>
+                </div>
+
+                <div class="spec-item">
+                    <h3>Genre</h3>
+                    <p><strong>Retro-style Arcade Space Survival & Collection</strong></p>
+                </div>
+
+                <div class="spec-item">
+                    <h3>Core Concept</h3>
+                    <p>The player controls a small spaceship inside a closed arena, collecting stars for points while
+                        avoiding or defeating progressively challenging alien enemies.</p>
+                </div>
+
+                <div class="spec-item">
+                    <h3>Gameplay Pillars</h3>
+                    <ul class="feature-list compact">
+                        <li><strong>Progressive Difficulty:</strong> Structured introduction of enemy types and
+                            behaviors.</li>
+                        <li><strong>Dynamic Levels:</strong> Increasing enemy counts and mixed-type waves.</li>
+                        <li><strong>Collectible Power-ups:</strong> Temporary abilities and permanent upgrades.</li>
+                        <li><strong>Boss Battles:</strong> Unique, phase-based encounters that unlock core abilities.
+                        </li>
+                        <li><strong>Endless Mode:</strong> Post-game content for high-score chasing.</li>
+                    </ul>
+                </div>
+
+                <div class="spec-item">
+                    <h3>Design Philosophy</h3>
+                    <p><strong>Retro-futuristic</strong> - Inspired by 80s arcade aesthetics, combined with modern
+                        smooth animations, vector graphics (SVG), and a neon color palette.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology and Assets Section -->
+        <section id="technology" class="section">
+            <h2>2. TECHNOLOGY AND ASSETS</h2>
+
+            <div class="spec-details compact">
+                <div class="spec-item">
+                    <h3>Core Technology Stack</h3>
+                    <table class="component-table compact">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Technology</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Frontend</td>
+                                <td>HTML, CSS, Vanilla JS</td>
+                            </tr>
+                            <tr>
+                                <td>Primary Font</td>
+                                <td>'Press Start 2P' by CodeMan38</td>
+                            </tr>
+                            <tr>
+                                <td>Graphics</td>
+                                <td>Custom .svg files</td>
+                            </tr>
+                            <tr>
+                                <td>Audio</td>
+                                <td>Synthwave Loops & 8-bit Style SFX</td>
+                            </tr>
+                            <tr>
+                                <td>Data Storage</td>
+                                <td>Local Storage (for JSON files: config, high-scores, levels)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- File Structure Section -->
+        <section id="file-structure" class="section">
+            <h2 class="collapsible-header">
+                3. FILE STRUCTURE
+                <span class="collapse-icon">▼</span>
+            </h2>
+
+            <div class="collapsible-content collapsed">
+                <div class="spec-details compact">
+                    <div class="spec-item">
+                        <h3>Project Structure</h3>
+                        <div class="file-tree compact">
+                            <div class="tree-node root">star-eater/</div>
+                            <div class="tree-branch">
+                                <div class="tree-node">index.html</div>
+                                <div class="tree-node">game-specification.html</div>
+                                <div class="tree-node">ui-documentation.html</div>
+                                <div class="tree-node">style.css</div>
+                                <div class="tree-node">assets/</div>
+                                <div class="tree-branch">
+                                    <div class="tree-node">graphics/</div>
+                                    <div class="tree-branch">
+                                        <div class="tree-node">player-avatar.svg</div>
+                                        <div class="tree-node">collectable-*.svg</div>
+                                        <div class="tree-node">hud-*.svg</div>
+                                        <div class="tree-node">enemy-*.svg</div>
+                                    </div>
+                                    <div class="tree-node">audio/</div>
+                                    <div class="tree-branch">
+                                        <div class="tree-node">music/</div>
+                                        <div class="tree-node">sfx/</div>
+                                    </div>
+                                    <div class="tree-node">data/</div>
+                                    <div class="tree-branch">
+                                        <div class="tree-node">config.json</div>
+                                        <div class="tree-node">levels.json</div>
+                                    </div>
+                                </div>
+                                <div class="tree-node">js/</div>
+                                <div class="tree-branch">
+                                    <div class="tree-node">game.js</div>
+                                    <div class="tree-node">player.js</div>
+                                    <div class="tree-node">enemies.js</div>
+                                    <div class="tree-node">collectables.js</div>
+                                    <div class="tree-node">powerups.js</div>
+                                    <div class="tree-node">ui.js</div>
+                                    <div class="tree-node">physics/</div>
+                                    <div class="tree-branch">
+                                        <div class="tree-node">collision-manager.js</div>
+                                    </div>
+                                    <div class="tree-node">utils/</div>
+                                    <div class="tree-branch">
+                                        <div class="tree-node">svg-utils.js</div>
+                                    </div>
+                                </div>
+                                <div class="tree-node">docs/</div>
+                                <div class="tree-branch">
+                                    <div class="tree-node">game-specification.html</div>
+                                    <div class="tree-node">ui-documentation.html</div>
+                                    <div class="tree-node">player-documentation.html</div>
+                                    <div class="tree-node">collectables-documentation.html</div>
+                                    <div class="tree-node">powerups-documentation.html</div>
+                                    <div class="tree-node">enemies-documentation.html</div>
+                                    <div class="tree-node">bosses-documentation.html</div>
+                                    <div class="tree-node">configuration-documentation.html</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Star Eater Game Specification - Complete technical documentation</p>
+        <p class="timestamp">Generated: 2024</p>
+    </footer>
+
+    <script>
+        // Collapsible section functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const collapsibleHeader = document.querySelector('.collapsible-header');
+            const collapsibleContent = document.querySelector('.collapsible-content');
+            const collapseIcon = document.querySelector('.collapse-icon');
+
+            collapsibleHeader.addEventListener('click', function () {
+                collapsibleContent.classList.toggle('collapsed');
+                collapseIcon.textContent = collapsibleContent.classList.contains('collapsed') ? '▼' : '▲';
+            });
+        });
+    </script>
+</body>
+
+</html>

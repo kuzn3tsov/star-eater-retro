@@ -1,13 +1,17 @@
+import { CollisionManager } from './physics/collision-manager.js';
+import { SVGUtils } from './utils/svg-utils.js';
+
 export class EnemyManager {
-    constructor(game) {
+    constructor(game, config) {
         this.game = game;
+        this.config = config;
         this.enemies = [];
         this.spawnTimer = 0;
         this.enemyElements = new Map();
         this.svgCache = new Map();
         this.targetEnemyCount = 0;
         this.lastRespawnTime = 0;
-        this.respawnCooldown = 30; // 30 seconds between respawns
+        this.respawnCooldown = config.enemies.respawnCooldown;
     }
 
     async initialize() {
@@ -87,7 +91,6 @@ export class EnemyManager {
     }
 
     handleRespawn(deltaTime) {
-        // Only respawn if we're below target count and enough time has passed
         if (this.enemies.length < this.targetEnemyCount) {
             this.lastRespawnTime += deltaTime;
 
@@ -245,7 +248,8 @@ export class EnemyManager {
                 vx: (dx / distance) * 200,
                 vy: (dy / distance) * 200,
                 type: projectileType,
-                damage: enemy.damage
+                damage: enemy.damage,
+                source: 'enemy' // Specify this is an enemy projectile
             });
         }
     }
@@ -262,7 +266,8 @@ export class EnemyManager {
             angle: angle,
             length: 300,
             damage: enemy.damage * 1.5,
-            speed: 400
+            speed: 400,
+            source: 'enemy'
         });
     }
 
@@ -304,24 +309,39 @@ export class EnemyManager {
     }
 
     getEnemyTypeForCategory(category, level) {
-        // For levels 1-14: Only teal rammers
+        // For levels 1-14: Rammer progression
         if (level <= 14 && category === 'rammer') {
-            return 'teal';
+            if (level <= 3) return 'teal';
+            if (level <= 6) return 'silver';
+            if (level <= 10) return 'blue';
+            return 'pink';
         }
 
-        // For levels 15-29: Only teal shooters
-        if (level >= 15 && level <= 29 && category === 'shooter') {
-            return 'teal';
+        // For levels 16-29: Shooter progression (skip level 15 - boss)
+        if (level >= 16 && level <= 29 && category === 'shooter') {
+            const shooterLevel = level - 15;
+            if (shooterLevel <= 3) return 'teal';
+            if (shooterLevel <= 6) return 'silver';
+            if (shooterLevel <= 10) return 'blue';
+            return 'pink';
         }
 
-        // For levels 30-44: Only teal beam-shooters
-        if (level >= 30 && level <= 44 && category === 'beam-shooter') {
-            return 'teal';
+        // For levels 31-44: Beam-shooter progression (skip level 30 - boss)
+        if (level >= 31 && level <= 44 && category === 'beam-shooter') {
+            const beamLevel = level - 30;
+            if (beamLevel <= 3) return 'teal';
+            if (beamLevel <= 6) return 'silver';
+            if (beamLevel <= 10) return 'blue';
+            return 'pink';
         }
 
-        // For levels 45-59: Only teal destroyers
-        if (level >= 45 && level <= 59 && category === 'destroyer') {
-            return 'teal';
+        // For levels 46-59: Destroyer progression (skip level 45 - boss)
+        if (level >= 46 && level <= 59 && category === 'destroyer') {
+            const destroyerLevel = level - 45;
+            if (destroyerLevel <= 3) return 'teal';
+            if (destroyerLevel <= 6) return 'silver';
+            if (destroyerLevel <= 10) return 'blue';
+            return 'pink';
         }
 
         // For mixed levels (61-74) and endless mode: random types with weights
@@ -364,8 +384,9 @@ export class EnemyManager {
                 transform-origin: center center;
             `;
 
-            const svgContent = this.svgCache.get(`${enemy.category}-${enemy.type}`) || this.createEnemyFallbackSVG(enemy);
-            element.innerHTML = this.processSVGContent(svgContent, enemy.width, enemy.height);
+            const svgContent = this.svgCache.get(`${enemy.category}-${enemy.type}`) ||
+                SVGUtils.createFallbackSVG('enemy', enemy.width, enemy.height, enemy.type, enemy.category);
+            element.innerHTML = SVGUtils.processSVGContent(svgContent, enemy.width, enemy.height);
 
             const gameContainer = document.getElementById('game-container');
             if (gameContainer) {
@@ -376,53 +397,6 @@ export class EnemyManager {
         } catch (error) {
             console.warn('Error creating enemy element:', error);
         }
-    }
-
-    processSVGContent(svgContent, width, height) {
-        try {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(svgContent, 'image/svg+xml');
-            const svgElement = doc.querySelector('svg');
-
-            if (svgElement) {
-                svgElement.setAttribute('width', '100%');
-                svgElement.setAttribute('height', '100%');
-                svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-
-                if (!svgElement.getAttribute('viewBox')) {
-                    svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
-                }
-
-                return svgElement.outerHTML;
-            }
-        } catch (error) {
-            console.warn('Error processing SVG content:', error);
-        }
-
-        return svgContent;
-    }
-
-    createEnemyFallbackSVG(enemy) {
-        const colors = {
-            'teal': '#20b2aa', 'silver': '#c0c0c0', 'blue': '#1e90ff', 'pink': '#ff69b4'
-        };
-
-        const color = colors[enemy.type] || '#20b2aa';
-        const symbol = this.getEnemySymbol(enemy.category);
-
-        return `
-            <svg width="${enemy.width}" height="${enemy.height}" viewBox="0 0 ${enemy.width} ${enemy.height}" xmlns="http://www.w3.org/2000/svg">
-                <rect width="${enemy.width}" height="${enemy.height}" fill="${color}" opacity="0.8"/>
-                <text x="${enemy.width / 2}" y="${enemy.height / 2}" text-anchor="middle" dy="0.3em" font-size="10" fill="white">${symbol}</text>
-            </svg>
-        `;
-    }
-
-    getEnemySymbol(category) {
-        const symbols = {
-            'rammer': 'R', 'shooter': 'S', 'beam-shooter': 'B', 'destroyer': 'D'
-        };
-        return symbols[category] || 'E';
     }
 
     updateEnemyElement(enemy) {
@@ -487,12 +461,12 @@ export class EnemyManager {
     getMaxEnemies() {
         const level = this.game.level;
 
-        // Level progression pattern: 3, 6, 10, 3, 6, 10, 3, 4, 6, 10
-        const pattern = [3, 6, 10, 3, 6, 10, 3, 4, 6, 10];
+        // Use level pattern from config
+        const pattern = this.config.enemies.levelPattern;
         const baseCount = pattern[(level - 1) % pattern.length];
 
         // Boss levels have 0 regular enemies
-        if ([15, 30, 45, 60, 75].includes(level)) {
+        if (this.config.enemies.bossLevels.includes(level)) {
             return 0;
         }
 

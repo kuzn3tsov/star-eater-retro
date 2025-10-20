@@ -1,6 +1,10 @@
+import { CollisionManager } from './physics/collision-manager.js';
+import { SVGUtils } from './utils/svg-utils.js';
+
 export class BossManager {
-    constructor(game) {
+    constructor(game, config) {
         this.game = game;
+        this.config = config;
         this.currentBoss = null;
         this.bossActive = false;
         this.bossSpawnTimer = 0;
@@ -45,6 +49,7 @@ export class BossManager {
             this.updateBossAttacks(deltaTime);
             this.updateBossBombs(deltaTime);
             this.updateBossPhases();
+            this.updateBossElement();
         }
     }
 
@@ -56,103 +61,88 @@ export class BossManager {
         this.bossActive = true;
         this.bossBombTimer = 0;
 
-        // Create boss DOM element
         this.createBossElement(this.currentBoss);
-
-        // FIXED: Auto-activate radar if unlocked during boss fights (as specified in design)
-        if (this.game.powerups && this.game.powerups.unlockedPowerUps.radar) {
-            this.game.powerups.activateBossRadar();
-        }
 
         console.log(`Spawning Boss ${bossNumber}: ${this.currentBoss.name}`);
 
-        // Create boss spawn effect
         this.createBossSpawnEffect();
     }
 
     getBossNumber(level) {
-        const bossLevels = { 15: 1, 30: 2, 45: 3, 60: 4, 75: 5 };
-        return bossLevels[level];
+        const bossConfigs = this.config.bosses;
+        for (const [bossName, bossConfig] of Object.entries(bossConfigs)) {
+            if (bossConfig.level === level) {
+                // Convert boss name to number (meteorCommander -> 1, skullReaper -> 2, etc.)
+                const bossNames = ['meteorCommander', 'skullReaper', 'theMachine', 'biohazardTitan', 'cosmicHorror'];
+                return bossNames.indexOf(bossName) + 1;
+            }
+        }
+        return null;
     }
 
     createBossTemplate(bossNumber) {
-        const bosses = {
+        const bossNames = ['meteorCommander', 'skullReaper', 'theMachine', 'biohazardTitan', 'cosmicHorror'];
+        const bossName = bossNames[bossNumber - 1];
+        const bossConfig = this.config.bosses[bossName];
+
+        if (!bossConfig) return null;
+
+        const bossTemplates = {
             1: {
                 name: "Meteor Commander",
-                maxHealth: 20,
-                health: 20,
                 width: 80,
                 height: 80,
                 speed: 40,
-                reward: "radar",
                 attacks: ["meteorSpread"],
-                attackCooldown: 2.0,
-                attackTimer: 1.0,
-                phase: 1,
                 color: "#8b4513"
             },
             2: {
                 name: "Skull Reaper",
-                maxHealth: 50,
-                health: 50,
                 width: 100,
                 height: 100,
                 speed: 35,
-                reward: "shield",
                 attacks: ["bigMeteorSpread"],
-                attackCooldown: 1.8,
-                attackTimer: 0.9,
-                phase: 1,
                 color: "#ff4444"
             },
             3: {
                 name: "The Machine",
-                maxHealth: 100,
-                health: 100,
                 width: 120,
                 height: 120,
                 speed: 30,
-                reward: "ionPulse",
                 attacks: ["rotatingLasers"],
-                attackCooldown: 1.5,
-                attackTimer: 0.7,
-                phase: 1,
                 color: "#00ffff"
             },
             4: {
                 name: "Biohazard Titan",
-                maxHealth: 200,
-                health: 200,
                 width: 140,
                 height: 140,
                 speed: 25,
-                reward: "extendedPower",
                 attacks: ["enemySpawn", "toxicClouds"],
-                attackCooldown: 1.2,
-                attackTimer: 0.6,
-                phase: 1,
                 color: "#00ff00"
             },
             5: {
                 name: "Cosmic Horror",
-                maxHealth: 500,
-                health: 500,
                 width: 160,
                 height: 160,
                 speed: 20,
-                reward: "endlessMode",
                 attacks: ["meteorSpread", "bigMeteorSpread", "rotatingLasers", "enemySpawn", "toxicClouds"],
-                attackCooldown: 0.8,
-                attackTimer: 0.4,
-                phase: 1,
                 color: "#ff00ff"
             }
         };
 
-        const boss = bosses[bossNumber];
-        if (!boss) return null;
+        const template = bossTemplates[bossNumber];
+        if (!template) return null;
 
-        // Position boss at top center of screen
+        const boss = {
+            ...template,
+            maxHealth: bossConfig.health,
+            health: bossConfig.health,
+            reward: bossConfig.reward,
+            attackCooldown: bossConfig.attackCooldown,
+            attackTimer: bossConfig.attackCooldown / 2,
+            phase: 1
+        };
+
         boss.x = (this.game.canvas.width - boss.width) / 2;
         boss.y = 50;
         boss.targetX = boss.x;
@@ -178,10 +168,10 @@ export class BossManager {
                 transform-origin: center center;
             `;
 
-            // Use cached SVG or create fallback
             const bossKey = boss.name.toLowerCase().replace(' ', '-');
-            const svgContent = this.bossSVGCache.get(bossKey) || this.createBossFallbackSVG(boss);
-            this.bossElement.innerHTML = this.processBossSVGContent(svgContent, boss.width, boss.height);
+            const svgContent = this.bossSVGCache.get(bossKey) ||
+                SVGUtils.createFallbackSVG('boss', boss.width, boss.height, boss.name, boss.color);
+            this.bossElement.innerHTML = SVGUtils.processSVGContent(svgContent, boss.width, boss.height);
 
             const gameContainer = document.getElementById('game-container');
             if (gameContainer) {
@@ -192,61 +182,15 @@ export class BossManager {
         }
     }
 
-    processBossSVGContent(svgContent, width, height) {
-        try {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(svgContent, 'image/svg+xml');
-            const svgElement = doc.querySelector('svg');
-
-            if (svgElement) {
-                svgElement.setAttribute('width', '100%');
-                svgElement.setAttribute('height', '100%');
-                svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-
-                // Ensure viewBox is set for proper scaling
-                if (!svgElement.getAttribute('viewBox')) {
-                    svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
-                }
-
-                return svgElement.outerHTML;
-            }
-        } catch (error) {
-            console.warn('Error processing boss SVG content:', error);
-        }
-
-        return svgContent;
-    }
-
-    createBossFallbackSVG(boss) {
-        const symbols = {
-            'Meteor Commander': '☄️',
-            'Skull Reaper': '💀',
-            'The Machine': '⚙️',
-            'Biohazard Titan': '☣️',
-            'Cosmic Horror': '👁️'
-        };
-
-        const symbol = symbols[boss.name] || '👑';
-
-        return `
-            <svg width="${boss.width}" height="${boss.height}" viewBox="0 0 ${boss.width} ${boss.height}" xmlns="http://www.w3.org/2000/svg">
-                <rect width="${boss.width}" height="${boss.height}" fill="${boss.color}" opacity="0.8"/>
-                <text x="${boss.width / 2}" y="${boss.height / 2}" text-anchor="middle" dy="0.3em" font-size="24" fill="white">${symbol}</text>
-            </svg>
-        `;
-    }
-
     updateBoss(deltaTime) {
         if (!this.currentBoss) return;
 
-        // Boss movement - slow patrol pattern
         this.currentBoss.targetX += Math.sin(Date.now() * 0.001) * 0.5;
         this.currentBoss.targetX = Math.max(100, Math.min(this.game.canvas.width - this.currentBoss.width - 100, this.currentBoss.targetX));
 
         this.currentBoss.x += (this.currentBoss.targetX - this.currentBoss.x) * 0.05;
         this.currentBoss.y += (this.currentBoss.targetY - this.currentBoss.y) * 0.05;
 
-        // Update attack timers
         this.currentBoss.attackTimer -= deltaTime;
     }
 
@@ -255,7 +199,6 @@ export class BossManager {
             this.bossElement.style.left = `${this.currentBoss.x}px`;
             this.bossElement.style.top = `${this.currentBoss.y}px`;
 
-            // Update damage state
             if (this.currentBoss.health < this.currentBoss.maxHealth * 0.33) {
                 this.bossElement.classList.add('boss-phase-transition');
             } else {
@@ -306,8 +249,9 @@ export class BossManager {
                         y: boss.y + boss.height / 2,
                         vx: Math.cos(angle) * 150,
                         vy: Math.sin(angle) * 150,
-                        type: 'meteor',
-                        damage: 1
+                        type: 'meteor', // Uses projectile-meteor.svg
+                        damage: 1,
+                        source: 'boss'
                     });
                 }
             }, i * 100);
@@ -320,7 +264,6 @@ export class BossManager {
             const angle = (Math.PI * 2 * i / spreadCount) + (Math.random() * 0.3 - 0.15);
             setTimeout(() => {
                 if (this.game.projectiles && this.game.player) {
-                    // Target player position
                     const playerCenter = this.game.player.center;
                     const dx = playerCenter.x - (boss.x + boss.width / 2);
                     const dy = playerCenter.y - (boss.y + boss.height / 2);
@@ -331,8 +274,9 @@ export class BossManager {
                         y: boss.y + boss.height / 2,
                         vx: Math.cos(targetAngle) * 120,
                         vy: Math.sin(targetAngle) * 120,
-                        type: 'big-meteor',
-                        damage: 2
+                        type: 'big-meteor', // Uses projectile-big-meteor.svg
+                        damage: 2,
+                        source: 'boss'
                     });
                 }
             }, i * 200);
@@ -352,8 +296,9 @@ export class BossManager {
                     angle: angle,
                     length: 400,
                     damage: 1,
-                    speed: 50, // Slow rotation
-                    duration: 3.0 // Longer duration
+                    speed: 50,
+                    duration: 3.0,
+                    source: 'boss'
                 });
             }
         }
@@ -396,27 +341,23 @@ export class BossManager {
     }
 
     createToxicCloud(x, y) {
-        // Create toxic cloud that damages player if they enter
         const cloud = {
             x: x - 40,
             y: y - 40,
             width: 80,
             height: 80,
             lifeTime: 5.0,
-            damage: 0.5 // Damage per second
+            damage: 0.5
         };
 
-        // Visual effect - FIXED: Use the correct method name
         if (this.game.particles) {
             this.game.particles.createToxicCloud(x, y);
         }
 
-        // Store cloud for collision detection - use game's toxicClouds array
         if (this.game.toxicClouds) {
             this.game.toxicClouds.push(cloud);
         }
 
-        // Auto-remove
         setTimeout(() => {
             if (this.game.toxicClouds) {
                 const index = this.game.toxicClouds.indexOf(cloud);
@@ -438,7 +379,6 @@ export class BossManager {
             this.currentBoss.phase = newPhase;
             console.log(`Boss ${this.currentBoss.name} entering Phase ${newPhase}!`);
 
-            // Phase transition effect
             this.createPhaseTransitionEffect();
         }
     }
@@ -448,7 +388,6 @@ export class BossManager {
 
         this.bossBombTimer += deltaTime;
 
-        // Spawn bombs every 5 seconds
         if (this.bossBombTimer >= 5.0) {
             this.spawnBossBombs();
             this.bossBombTimer = 0;
@@ -463,10 +402,8 @@ export class BossManager {
             const bombX = 50 + Math.random() * (this.game.canvas.width - 100);
             const bombY = 100 + Math.random() * (this.game.canvas.height - 200);
 
-            // Create warning effect first
             this.createBombWarning(bombX, bombY, warningTime);
 
-            // Spawn bomb after warning
             setTimeout(() => {
                 this.spawnSingleBomb(bombX, bombY);
             }, warningTime * 1000);
@@ -509,15 +446,13 @@ export class BossManager {
             y: y - 10,
             width: 20,
             height: 20,
-            lifeTime: 3.0, // Bombs last 3 seconds
+            lifeTime: 3.0,
             svg: 'collectable-azure-bomb.svg'
         };
 
-        // Use collectible system to create the bomb
         this.game.collectibles.collectibles.push(bomb);
         this.game.collectibles.createCollectibleElement(bomb);
 
-        // Auto-remove if not collected
         setTimeout(() => {
             const index = this.game.collectibles.collectibles.indexOf(bomb);
             if (index > -1) {
@@ -530,7 +465,6 @@ export class BossManager {
     createBossSpawnEffect() {
         if (!this.currentBoss || !this.game.particles) return;
 
-        // FIXED: Use the correct method name
         this.game.particles.createBossSpawnEffect(
             this.currentBoss.x + this.currentBoss.width / 2,
             this.currentBoss.y + this.currentBoss.height / 2,
@@ -548,13 +482,11 @@ export class BossManager {
             '#ff4444'
         );
 
-        // Screen shake for phase transition
         if (this.game.screenShake) {
             this.game.screenShake(15);
         }
     }
 
-    // NEW METHOD: Add this to fix the collectible damage issue
     takeDamage(damage) {
         this.damageBoss(damage);
     }
@@ -564,10 +496,8 @@ export class BossManager {
 
         this.currentBoss.health -= damage;
 
-        // Visual feedback
         this.createBossDamageEffect();
 
-        // Check for boss defeat
         if (this.currentBoss.health <= 0) {
             this.defeatBoss();
         }
@@ -576,7 +506,6 @@ export class BossManager {
     createBossDamageEffect() {
         if (!this.currentBoss) return;
 
-        // Flash effect
         if (this.bossElement) {
             this.bossElement.classList.add('boss-damage');
             setTimeout(() => {
@@ -586,7 +515,6 @@ export class BossManager {
             }, 200);
         }
 
-        // Damage numbers
         if (this.game.particles) {
             this.game.particles.createTextEffect(
                 this.currentBoss.x + this.currentBoss.width / 2,
@@ -600,18 +528,17 @@ export class BossManager {
     defeatBoss() {
         console.log(`Boss ${this.currentBoss.name} defeated!`);
 
-        // Reward player
         this.giveBossReward();
 
-        // Victory effects
         this.createBossDefeatEffect();
 
-        // Clear boss state
         this.bossActive = false;
         this.removeBossElement();
         this.currentBoss = null;
 
-        // Advance level after short delay
+        // Notify game engine that boss fight is over
+        this.game.bossFightInProgress = false;
+
         setTimeout(() => {
             if (this.game.levelComplete) {
                 this.game.levelComplete();
@@ -625,24 +552,23 @@ export class BossManager {
         switch (this.currentBoss.reward) {
             case 'radar':
                 this.game.powerups.unlockPowerUp('radar');
-                // Auto-activate radar for future boss fights
-                this.game.powerups.activateBossRadar();
                 break;
             case 'shield':
-                this.game.powerups.unlockPowerUp('shield');  // Now properly unlocks
+                this.game.powerups.unlockPowerUp('shield');
                 break;
             case 'ionPulse':
-                this.game.powerups.unlockPowerUp('ionPulse'); // Now properly unlocks
+                this.game.powerups.unlockPowerUp('ionPulse');
                 break;
             case 'extendedPower':
                 this.game.powerups.unlockExtendedPower();
                 break;
             case 'endlessMode':
-                // Endless mode activation
+                if (this.game.startEndlessMode) {
+                    this.game.startEndlessMode();
+                }
                 break;
         }
 
-        // Score reward
         if (this.game.addScore) {
             this.game.addScore(this.currentBoss.maxHealth * 10);
         }
@@ -651,21 +577,22 @@ export class BossManager {
     createBossDefeatEffect() {
         if (!this.currentBoss || !this.game.particles) return;
 
-        // Big explosion - FIXED: Use createExplosion for now, or implement createBossDefeatEffect
-        this.game.particles.createExplosion(
+        this.game.particles.createBossDefeatEffect(
             this.currentBoss.x + this.currentBoss.width / 2,
             this.currentBoss.y + this.currentBoss.height / 2,
-            this.currentBoss.color,
-            20 // More particles for boss defeat
+            this.currentBoss.color
         );
 
-        // Victory text
         this.game.particles.createTextEffect(
             this.game.canvas.width / 2,
             this.game.canvas.height / 2,
             'BOSS DEFEATED!',
             '#ffd700'
         );
+
+        if (this.game.screenShake) {
+            this.game.screenShake(20);
+        }
     }
 
     removeBossElement() {
@@ -681,7 +608,6 @@ export class BossManager {
         this.updateBossElement();
         this.drawBossHealthBar(ctx);
 
-        // Fallback rendering if DOM element fails
         if (!this.bossElement) {
             this.drawBossFallback(ctx);
         }
@@ -693,19 +619,15 @@ export class BossManager {
         ctx.save();
         ctx.translate(this.currentBoss.x + this.currentBoss.width / 2, this.currentBoss.y + this.currentBoss.height / 2);
 
-        // Boss color
         ctx.fillStyle = this.currentBoss.color;
 
-        // Draw boss as colored rectangle (fallback if SVG not loaded)
         ctx.fillRect(-this.currentBoss.width / 2, -this.currentBoss.height / 2, this.currentBoss.width, this.currentBoss.height);
 
-        // Boss glow effect
         ctx.shadowColor = this.currentBoss.color;
         ctx.shadowBlur = 20;
         ctx.fillRect(-this.currentBoss.width / 2, -this.currentBoss.height / 2, this.currentBoss.width, this.currentBoss.height);
         ctx.shadowBlur = 0;
 
-        // Boss name
         ctx.fillStyle = '#ffffff';
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
@@ -724,25 +646,26 @@ export class BossManager {
 
         const healthPercent = this.currentBoss.health / this.currentBoss.maxHealth;
 
-        // Background
         ctx.fillStyle = '#333333';
         ctx.fillRect(x, y, barWidth, barHeight);
 
-        // Health
         ctx.fillStyle = healthPercent > 0.5 ? '#00ff00' : healthPercent > 0.25 ? '#ffff00' : '#ff4444';
         ctx.fillRect(x, y, barWidth * healthPercent, barHeight);
 
-        // Border
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, barWidth, barHeight);
 
-        // Phase indicators
         const phaseWidth = barWidth / 3;
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 1;
         ctx.strokeRect(x + phaseWidth, y, 1, barHeight);
         ctx.strokeRect(x + phaseWidth * 2, y, 1, barHeight);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.currentBoss.name, this.game.canvas.width / 2, y - 10);
     }
 
     clear() {
@@ -751,6 +674,8 @@ export class BossManager {
         this.bossActive = false;
         this.bossSpawnTimer = 0;
         this.bossBombTimer = 0;
+
+        this.bossWarningTimers.forEach(timer => clearTimeout(timer));
         this.bossWarningTimers = [];
     }
 }

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Eater - UI Documentation</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Star Eater - UI Documentation</h1>
+        <p class="subtitle">Complete interface guide with layouts, components, and interactions</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="./game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <!-- Rest of the file content remains the same -->
+    <main>
+        <!-- HUD Section -->
+        <section id="hud" class="section">
+            <h2>HUD (Heads-Up Display)</h2>
+
+            <div class="hud-preview">
+                <div class="hud-simulator">
+                    <!-- HUD Top Bar -->
+                    <div class="hud-top-sim">
+                        <div class="hud-left-sim">
+                            <span class="icon-sim">
+                                <img src="../assets/graphics/hud-top-rocket.svg" alt="Rocket" class="hud-icon">
+                            </span>
+                            <span class="title-sim">STAR EATER</span>
+                            <span class="icon-sim">
+                                <img src="../assets/graphics/hud-top-star.svg" alt="Star" class="hud-icon">
+                            </span>
+                        </div>
+                        <div class="hud-right-sim">
+                            <span class="icon-sim">
+                                <img src="../assets/graphics/hud-top-highscore.svg" alt="High Score" class="hud-icon">
+                            </span>
+                            <span class="score-sim">12500 ACE</span>
+                        </div>
+                    </div>
+
+                    <!-- HUD Bottom Bar -->
+                    <div class="hud-bottom-sim">
+                        <div class="status-left-sim">
+                            <div class="player-name-sim">PLAYER</div>
+                            <div class="status-item-sim">
+                                <span class="icon-sim">
+                                    <img src="../assets/graphics/hud-player-score.svg" alt="Score" class="status-icon">
+                                </span>
+                                <span>00250</span>
+                            </div>
+                            <div class="status-item-sim">
+                                <span class="icon-sim">
+                                    <img src="../assets/graphics/hud-player-level.svg" alt="Level" class="status-icon">
+                                </span>
+                                <span>05</span>
+                            </div>
+                            <div class="status-item-sim">
+                                <span class="icon-sim">
+                                    <img src="../assets/graphics/hud-player-life.svg" alt="Lives" class="status-icon">
+                                </span>
+                                <span>3</span>
+                            </div>
+                            <div class="powerups-sim">
+                                <div class="powerup-icon-sim shield unlocked cooldown"
+                                    title="Shield (Q) - 30s cooldown">
+                                    <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                                </div>
+                                <div class="powerup-icon-sim ion unlocked ready" title="Ion Pulse (E) - 25s cooldown">
+                                    <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse">
+                                </div>
+                                <div class="powerup-icon-sim radar unlocked inactive"
+                                    title="Radar - Auto-active on boss levels">
+                                    <img src="../assets/graphics/hud-player-radar.svg" alt="Radar">
+                                </div>
+                                <div class="powerup-icon-sim starpower unlocked inactive"
+                                    title="Star Power - Invincibility">
+                                    <img src="../assets/graphics/hud-player-star-power.svg" alt="Star Power">
+                                </div>
+                                <div class="powerup-icon-sim endless locked" title="Endless Mode">
+                                    <img src="../assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="controls-right-sim">
+                            <button class="control-btn-sim" title="Play/Pause">
+                                <img src="../assets/graphics/hud-controls-pause.svg" alt="Pause" class="control-icon">
+                            </button>
+                            <button class="control-btn-sim" title="Restart">
+                                <img src="../assets/graphics/hud-controls-restart.svg" alt="Restart"
+                                    class="control-icon">
+                            </button>
+                            <button class="control-btn-sim" title="Sound On">
+                                <img src="../assets/graphics/hud-controls-sound-on.svg" alt="Sound On"
+                                    class="control-icon">
+                            </button>
+                            <button class="control-btn-sim" title="Info">
+                                <img src="../assets/graphics/hud-controls-info.svg" alt="Info" class="control-icon">
+                            </button>
+                            <button class="control-btn-sim" title="High Scores">
+                                <img src="../assets/graphics/hud-top-highscore.svg" alt="High Scores"
+                                    class="control-icon">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-details">
+                <div class="detail-column">
+                    <h3>HUD Top Bar</h3>
+                    <table class="component-table">
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Content</th>
+                                <th>Style</th>
+                                <th>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Game Title</td>
+                                <td>"STAR EATER"</td>
+                                <td>Neon gold with glow</td>
+                                <td>Brand identity</td>
+                            </tr>
+                            <tr>
+                                <td>High Score</td>
+                                <td>12500 ACE</td>
+                                <td>Interactive, hover glow</td>
+                                <td>Opens High Scores modal</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="detail-column">
+                    <h3>Status Items</h3>
+                    <table class="component-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Icon</th>
+                                <th>Format</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Player Name</td>
+                                <td>N/A</td>
+                                <td>PLAYER</td>
+                                <td>Player identification</td>
+                            </tr>
+                            <tr>
+                                <td>Score</td>
+                                <td><img src="../assets/graphics/hud-player-score.svg" alt="Score" class="table-icon">
+                                </td>
+                                <td>00000</td>
+                                <td>Current points</td>
+                            </tr>
+                            <tr>
+                                <td>Level</td>
+                                <td><img src="../assets/graphics/hud-player-level.svg" alt="Level" class="table-icon">
+                                </td>
+                                <td>01</td>
+                                <td>Current level</td>
+                            </tr>
+                            <tr>
+                                <td>Lives</td>
+                                <td><img src="../assets/graphics/hud-player-life.svg" alt="Lives" class="table-icon">
+                                </td>
+                                <td>3</td>
+                                <td>Remaining lives</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Power-up System Section -->
+        <section id="powerups" class="section">
+            <h2>Power-up System</h2>
+
+            <div class="powerups-grid">
+                <!-- Shield Power-up -->
+                <div class="powerup-card shield">
+                    <div class="powerup-header">
+                        <div class="powerup-icon-large">
+                            <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                        </div>
+                        <h3>Shield</h3>
+                    </div>
+                    <div class="powerup-details">
+                        <p><strong>Activation:</strong> Q key</p>
+                        <p><strong>Cooldown:</strong> 30 seconds</p>
+                        <p><strong>Duration:</strong> 10 seconds</p>
+                        <p><strong>Effect:</strong> Protects from enemy collisions, freezes nearby enemies</p>
+                    </div>
+                    <div class="state-indicators">
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim shield locked">
+                                    <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim shield ready">
+                                    <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim shield cooldown">
+                                    <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim shield cooldown">
+                                    <img src="../assets/graphics/hud-player-shield.svg" alt="Shield">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ion Pulse Power-up -->
+                <div class="powerup-card ion">
+                    <div class="powerup-header">
+                        <div class="powerup-icon-large">
+                            <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse">
+                        </div>
+                        <h3>Ion Pulse</h3>
+                    </div>
+                    <div class="powerup-details">
+                        <p><strong>Activation:</strong> E key</p>
+                        <p><strong>Cooldown:</strong> 25 seconds</p>
+                        <p><strong>Effect:</strong> Instant area damage to nearby enemies</p>
+                    </div>
+                    <div class="state-indicators">
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim ion locked">
+                                    <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim ion ready">
+                                    <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim ion cooldown">
+                                    <img src="../assets/graphics/hud-player-ion-pulse.svg" alt="Ion Pulse">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radar Power-up -->
+                <div class="powerup-card radar">
+                    <div class="powerup-header">
+                        <div class="powerup-icon-large">
+                            <img src="../assets/graphics/hud-player-radar.svg" alt="Radar">
+                        </div>
+                        <h3>Radar</h3>
+                    </div>
+                    <div class="powerup-details">
+                        <p><strong>Activation:</strong> Automatic on boss levels</p>
+                        <p><strong>Duration:</strong> Entire boss level</p>
+                        <p><strong>Effect:</strong> Reveals collectibles and bomb spawns</p>
+                        <p><strong>Note:</strong> Inactive on non-boss levels</p>
+                    </div>
+                    <div class="state-indicators">
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim radar locked">
+                                    <img src="../assets/graphics/hud-player-radar.svg" alt="Radar">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim radar active">
+                                    <img src="../assets/graphics/hud-player-radar.svg" alt="Radar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Star Power Power-up -->
+                <div class="powerup-card starpower">
+                    <div class="powerup-header">
+                        <div class="powerup-icon-large">
+                            <img src="../assets/graphics/hud-player-star-power.svg" alt="Star Power">
+                        </div>
+                        <h3>Star Power</h3>
+                    </div>
+                    <div class="powerup-details">
+                        <p><strong>Activation:</strong> Blue Star collectible</p>
+                        <p><strong>Duration:</strong> 10 seconds</p>
+                        <p><strong>Effect:</strong> Invincibility, destroys enemies on contact</p>
+                    </div>
+                    <div class="state-indicators">
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim starpower inactive">
+                                    <img src="../assets/graphics/hud-player-star-power.svg" alt="Star Power">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim starpower cooldown">
+                                    <img src="../assets/graphics/hud-player-star-power.svg" alt="Star Power">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endless Mode Power-up -->
+                <div class="powerup-card endless">
+                    <div class="powerup-header">
+                        <div class="powerup-icon-large">
+                            <img src="../assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode">
+                        </div>
+                        <h3>Endless Mode</h3>
+                    </div>
+                    <div class="powerup-details">
+                        <p><strong>Unlock:</strong> Defeat Cosmic Horror boss</p>
+                        <p><strong>Effect:</strong> Continuous gameplay after main story</p>
+                    </div>
+                    <div class="state-indicators">
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim endless locked">
+                                    <img src="../assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="state">
+                            <div class="state-icon">
+                                <div class="powerup-icon-sim endless active">
+                                    <img src="../assets/graphics/hud-player-endless-mode.svg" alt="Endless Mode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Control Buttons Section -->
+        <section id="controls" class="section">
+            <h2>Control Buttons</h2>
+
+            <div class="controls-grid">
+                <!-- Play/Pause Button -->
+                <div class="control-card">
+                    <div class="control-icon">
+                        <img src="../assets/graphics/hud-controls-pause.svg" alt="Play/Pause">
+                    </div>
+                    <h3>Play/Pause</h3>
+                    <p><strong>ID:</strong> play-pause-btn</p>
+                    <p><strong>Icons:</strong>
+                        <img src="../assets/graphics/hud-controls-pause.svg" alt="Pause" class="inline-icon"> (Pause) /
+                        <img src="../assets/graphics/hud-controls-play.svg" alt="Play" class="inline-icon"> (Play)
+                    </p>
+                    <p><strong>Start State:</strong> Pause icon visible</p>
+                    <p><strong>Function:</strong> Toggles game state</p>
+                    <div class="state-showcase">
+                        <span class="state-badge playing">Playing</span>
+                        <span class="state-badge paused">Paused</span>
+                    </div>
+                </div>
+
+                <!-- Restart Button -->
+                <div class="control-card">
+                    <div class="control-icon">
+                        <img src="../assets/graphics/hud-controls-restart.svg" alt="Restart">
+                    </div>
+                    <h3>Restart</h3>
+                    <p><strong>ID:</strong> restart-btn</p>
+                    <p><strong>Icon:</strong>
+                        <img src="../assets/graphics/hud-controls-restart.svg" alt="Restart" class="inline-icon">
+                    </p>
+                    <p><strong>Function:</strong> Restarts current game</p>
+                    <p><strong>Style:</strong> Cyan border, hover glow</p>
+                </div>
+
+                <!-- Sound Toggle Button -->
+                <div class="control-card">
+                    <div class="control-icon">
+                        <img src="../assets/graphics/hud-controls-sound-on.svg" alt="Sound">
+                    </div>
+                    <h3>Sound Toggle</h3>
+                    <p><strong>ID:</strong> sound-btn</p>
+                    <p><strong>Icons:</strong>
+                        <img src="../assets/graphics/hud-controls-sound-on.svg" alt="Sound On" class="inline-icon"> (On)
+                        /
+                        <img src="../assets/graphics/hud-controls-sound-off.svg" alt="Sound Off" class="inline-icon">
+                        (Off)
+                    </p>
+                    <p><strong>Start State:</strong> Sound On</p>
+                    <p><strong>Function:</strong> Toggles audio</p>
+                    <div class="state-showcase">
+                        <span class="state-badge sound-on">Sound On</span>
+                        <span class="state-badge sound-off">Sound Off</span>
+                    </div>
+                </div>
+
+                <!-- Info Button -->
+                <div class="control-card">
+                    <div class="control-icon">
+                        <img src="../assets/graphics/hud-controls-info.svg" alt="Info">
+                    </div>
+                    <h3>Info</h3>
+                    <p><strong>ID:</strong> info-btn</p>
+                    <p><strong>Icon:</strong>
+                        <img src="../assets/graphics/hud-controls-info.svg" alt="Info" class="inline-icon">
+                    </p>
+                    <p><strong>Function:</strong> Opens Info modal</p>
+                    <p><strong>Content:</strong> Controls & power-ups guide</p>
+                </div>
+
+                <!-- High Scores Button -->
+                <div class="control-card">
+                    <div class="control-icon">
+                        <img src="../assets/graphics/hud-top-highscore.svg" alt="High Scores">
+                    </div>
+                    <h3>High Scores</h3>
+                    <p><strong>ID:</strong> high-score-btn</p>
+                    <p><strong>Icon:</strong>
+                        <img src="../assets/graphics/hud-top-highscore.svg" alt="High Scores" class="inline-icon">
+                    </p>
+                    <p><strong>Function:</strong> Opens High Scores modal</p>
+                    <p><strong>Note:</strong> Also in HUD top bar</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Star Eater UI Documentation - Complete interface reference guide</p>
+        <p class="timestamp">Generated: 2024</p>
+    </footer>
+</body>
+
+</html>

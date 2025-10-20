@@ -1,3 +1,6 @@
+import { CollisionManager } from './physics/collision-manager.js';
+import { SVGUtils } from './utils/svg-utils.js';
+
 export class Player {
     constructor(game) {
         this.game = game;
@@ -53,16 +56,7 @@ export class Player {
     useFallbackSVG() {
         if (!this.domElement) return;
 
-        const fallbackSVG = `
-            <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path d="M24 4 L44 24 L34 24 L34 44 L14 44 L14 24 L4 24 Z"
-                      fill="#daa520" stroke="#000" stroke-width="2"/>
-                <circle cx="24" cy="20" r="6" fill="#00ffff" stroke="#000" stroke-width="1"/>
-                <rect x="18" y="38" width="12" height="4" fill="#ff6b00" stroke="#000" stroke-width="1"/>
-                <rect x="20" y="42" width="8" height="2" fill="#ff4444" stroke="#000" stroke-width="1"/>
-            </svg>
-        `;
-
+        const fallbackSVG = SVGUtils.createFallbackSVG('player', this.width, this.height);
         this.domElement.innerHTML = fallbackSVG;
         this.updatePlayerAppearance();
     }
@@ -86,6 +80,7 @@ export class Player {
         this.domElement.style.left = '0px';
         this.domElement.style.top = '0px';
 
+        // Temporary fallback content
         this.domElement.innerHTML = `
             <div style="width:100%;height:100%;background:red;border:4px solid yellow;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:bold;">
                 PLAYER
@@ -178,7 +173,12 @@ export class Player {
         if (this.starPowerTime > 0) {
             this.starPowerTime -= deltaTime;
             if (this.starPowerTime <= 0) {
+                this.starPowerTime = 0;
                 this.updatePlayerAppearance();
+                // Notify state manager that star power has expired
+                if (this.game.powerUpStateManager) {
+                    this.game.powerUpStateManager.deactivatePowerUp('starPower');
+                }
             }
         }
 
@@ -227,8 +227,8 @@ export class Player {
         const playerCenterX = this.x + this.width / 2;
         const playerCenterY = this.y + this.height / 2;
 
-        const rearOffsetX = Math.cos(angle) * (this.width / 2 + 40);
-        const rearOffsetY = Math.sin(angle) * (this.height / 2 + 40);
+        const rearOffsetX = Math.cos(angle) * (this.width / 2 + 24);
+        const rearOffsetY = Math.sin(angle) * (this.height / 2 + 24);
 
         const particleX = playerCenterX + rearOffsetX;
         const particleY = playerCenterY + rearOffsetY;

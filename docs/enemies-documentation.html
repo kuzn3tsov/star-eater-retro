@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enemies System - Star Eater Documentation</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Enemies System</h1>
+        <p class="subtitle">Enemy types, behaviors, and progression system</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <!-- Rammer Enemies Section -->
+    <div class="section">
+        <h2>Rammer Enemies</h2>
+        <p class="enemy-class-description">Close-range attackers that charge toward the player with aggressive pursuit
+            patterns.</p>
+
+        <div class="enemies-grid">
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-rammer-teal.svg" alt="Teal Rammer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Teal Rammer</h3>
+                        <p>Basic Charger</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 3.0</p>
+                        <p><strong>Charge Cooldown:</strong> 2.5s</p>
+                        <p><strong>Damage:</strong> 1</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Direct Charge:</strong> Charges straight toward player position</li>
+                            <li><strong>Cooldown Period:</strong> Pauses for 1s between charges</li>
+                            <li><strong>Simple Aiming:</strong> Aims at player's current position</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Most basic rammer type. Easy to dodge with simple strafing.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-rammer-silver.svg" alt="Silver Rammer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Silver Rammer</h3>
+                        <p>Tank Charger</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 2</p>
+                        <p><strong>Speed:</strong> 3.5</p>
+                        <p><strong>Charge Cooldown:</strong> 2.2s</p>
+                        <p><strong>Damage:</strong> 1</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Persistent Pursuit:</strong> Maintains closer distance to player</li>
+                            <li><strong>Faster Recovery:</strong> Shorter cooldown between charges</li>
+                            <li><strong>Basic Prediction:</strong> Aims slightly ahead of player</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Has extra health making it more durable. Requires multiple hits to destroy.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-rammer-blue.svg" alt="Blue Rammer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Blue Rammer</h3>
+                        <p>Elite Charger</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 4.5</p>
+                        <p><strong>Charge Cooldown:</strong> 1.8s</p>
+                        <p><strong>Damage:</strong> 1</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Advanced Prediction:</strong> Calculates player trajectory</li>
+                            <li><strong>Quick Turns:</strong> Can adjust charge direction mid-attack</li>
+                            <li><strong>Pressure Tactics:</strong> Rarely retreats, maintains pressure</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Highly aggressive. Requires strategic positioning and timing to counter.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-rammer-pink.svg" alt="Pink Rammer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Pink Rammer</h3>
+                        <p>Master Charger</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 5.5</p>
+                        <p><strong>Charge Cooldown:</strong> 1.2s</p>
+                        <p><strong>Damage:</strong> 1</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Perfect Prediction:</strong> Near-perfect player movement analysis</li>
+                            <li><strong>Minimal Cooldown:</strong> Almost continuous charging</li>
+                            <li><strong>Flanking Behavior:</strong> Attempts to approach from angles</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Extremely dangerous. Requires advanced evasion techniques and power-ups.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shooter Enemies Section -->
+    <div class="section">
+        <h2>Shooter Enemies</h2>
+        <p class="enemy-class-description">Long-range attackers that maintain distance and fire burst projectiles at the
+            player.</p>
+
+        <div class="enemies-grid">
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-shooter-teal.svg" alt="Teal Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Teal Shooter</h3>
+                        <p>Basic Artillery</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 1.8</p>
+                        <p><strong>Fire Rate:</strong> 2.0s</p>
+                        <p><strong>Projectile:</strong> 1 burst projectile</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Distance Maintenance:</strong> Keeps 200-300px from player</li>
+                            <li><strong>Simple Strafing:</strong> Moves horizontally while firing</li>
+                            <li><strong>Fixed Pattern:</strong> Predictable movement cycles</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Pattern</h4>
+                        <ul>
+                            <li><strong>Single Burst:</strong> Fires 1 burst projectile</li>
+                            <li><strong>Direct Aiming:</strong> Shoots at current player position</li>
+                            <li><strong>Slow Projectiles:</strong> Easy to dodge projectiles</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Easiest shooter variant. Good for learning projectile patterns.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-shooter-silver.svg" alt="Silver Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Silver Shooter</h3>
+                        <p>Tank Artillery</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 2</p>
+                        <p><strong>Speed:</strong> 2.0</p>
+                        <p><strong>Fire Rate:</strong> 1.8s</p>
+                        <p><strong>Projectile:</strong> 2 burst projectiles</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Orbital Movement:</strong> Circles player while maintaining distance</li>
+                            <li><strong>Variable Distance:</strong> Adjusts range based on player aggression</li>
+                            <li><strong>Basic Aiming:</strong> Leads shots slightly</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Pattern</h4>
+                        <ul>
+                            <li><strong>Double Burst:</strong> Fires 2 burst projectiles in sequence</li>
+                            <li><strong>Split Pattern:</strong> Projectiles spread slightly apart</li>
+                            <li><strong>Medium Speed:</strong> Moderately challenging to dodge</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Has extra health making it more durable. Requires multiple hits to destroy.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-shooter-blue.svg" alt="Blue Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Blue Shooter</h3>
+                        <p>Elite Artillery</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 2.5</p>
+                        <p><strong>Fire Rate:</strong> 1.4s</p>
+                        <p><strong>Projectile:</strong> 3 burst projectiles</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Complex Orbiting:</strong> Figure-8 patterns around player</li>
+                            <li><strong>Range Mixing:</strong> Alternates between close and far positioning</li>
+                            <li><strong>Predictive Firing:</strong> Fires at anticipated player positions</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Pattern</h4>
+                        <ul>
+                            <li><strong>Triple Burst:</strong> Fires 3 burst projectiles simultaneously</li>
+                            <li><strong>Wide Spread:</strong> Projectiles cover larger area</li>
+                            <li><strong>Fast Projectiles:</strong> Quick-moving and harder to dodge</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Dangerous spread patterns require careful movement through safe zones.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-shooter-pink.svg" alt="Pink Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Pink Shooter</h3>
+                        <p>Master Artillery</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 3.0</p>
+                        <p><strong>Fire Rate:</strong> 1.0s</p>
+                        <p><strong>Projectile:</strong> 5 burst projectiles</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Unpredictable Pathing:</strong> Random-seeming but calculated movements</li>
+                            <li><strong>Pressure Positioning:</strong> Often positions to limit escape routes</li>
+                            <li><strong>Perfect Timing:</strong> Fires during player movement commitments</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Pattern</h4>
+                        <ul>
+                            <li><strong>Quintuple Burst:</strong> Fires 5 burst projectiles in wide pattern</li>
+                            <li><strong>Full Coverage:</strong> Projectiles cover most escape routes</li>
+                            <li><strong>Very Fast Projectiles:</strong> Extremely challenging to dodge</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Extremely challenging. Requires mastery of movement and situational awareness.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beam Shooter Enemies Section -->
+    <div class="section">
+        <h2>Beam Shooter Enemies</h2>
+        <p class="enemy-class-description">Medium-range attackers with continuous beam weapons that require line of
+            sight.</p>
+
+        <div class="enemies-grid">
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-beam-shooter-teal.svg" alt="Teal Beam Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Teal Beam Shooter</h3>
+                        <p>Basic Beam Unit</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 1.3</p>
+                        <p><strong>Beam Duration:</strong> 2.5s</p>
+                        <p><strong>Cooldown:</strong> 2.5s</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Line of Sight Focus:</strong> Constantly moves to maintain clear shot</li>
+                            <li><strong>Medium Range:</strong> Stays 150-250px from player</li>
+                            <li><strong>Predictable Tracking:</strong> Simple left-right beam sweeps</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Beam can be avoided by breaking line of sight with obstacles or quick dodging.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-beam-shooter-silver.svg" alt="Silver Beam Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Silver Beam Shooter</h3>
+                        <p>Tank Beam Unit</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 2</p>
+                        <p><strong>Speed:</strong> 1.5</p>
+                        <p><strong>Beam Duration:</strong> 3.0s</p>
+                        <p><strong>Cooldown:</strong> 2.2s</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Flanking Behavior:</strong> Attempts to attack from player's blind spots</li>
+                            <li><strong>Variable Range:</strong> Adjusts distance based on player attention</li>
+                            <li><strong>Improved Tracking:</strong> Smoother beam movement</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Has extra health making it more durable. Requires multiple hits to destroy.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-beam-shooter-blue.svg" alt="Blue Beam Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Blue Beam Shooter</h3>
+                        <p>Elite Beam Unit</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 1.8</p>
+                        <p><strong>Beam Duration:</strong> 3.5s</p>
+                        <p><strong>Cooldown:</strong> 1.8s</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Advanced Flanking:</strong> Coordinates with other enemies</li>
+                            <li><strong>Pressure Application:</strong> Positions to limit escape routes</li>
+                            <li><strong>Beam Prediction:</strong> Anticipates player dodging patterns</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Extremely dangerous in groups. Prioritize elimination when multiple are present.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-beam-shooter-pink.svg" alt="Pink Beam Shooter">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Pink Beam Shooter</h3>
+                        <p>Master Beam Unit</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 2.2</p>
+                        <p><strong>Beam Duration:</strong> 4.0s</p>
+                        <p><strong>Cooldown:</strong> 1.5s</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Perfect Positioning:</strong> Always finds optimal firing angles</li>
+                            <li><strong>Minimal Downtime:</strong> Almost continuous beam threat</li>
+                            <li><strong>Area Denial:</strong> Uses beam to control space and movement</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Ultimate beam threat. Requires perfect movement and prioritization in combat.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destroyer Enemies Section -->
+    <div class="section">
+        <h2>Destroyer Enemies</h2>
+        <p class="enemy-class-description">Tank-like enemies with dual attack capabilities - they randomly use either
+            burst projectiles or beam attacks.</p>
+
+        <div class="enemies-grid">
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-destroyer-teal.svg" alt="Teal Destroyer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Teal Destroyer</h3>
+                        <p>Basic Tank</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 0.8</p>
+                        <p><strong>Attack Rate:</strong> 4.5s</p>
+                        <p><strong>Attack Type:</strong> Random selection</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Direct Pursuit:</strong> Slow, steady movement toward player</li>
+                            <li><strong>Medium Range:</strong> Stays 150-250px from player</li>
+                            <li><strong>Predictable Pathing:</strong> Simple movement patterns</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Burst Projectile:</strong> Fires 1 burst projectile (Teal Shooter)</li>
+                            <li><strong>Basic Beam:</strong> Short-duration beam attack (Teal Beam)</li>
+                            <li><strong>Random Selection:</strong> Chooses attack type randomly each cycle</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Basic dual-attack enemy. Easy to predict but requires awareness of both attack types.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-destroyer-silver.svg" alt="Silver Destroyer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Silver Destroyer</h3>
+                        <p>Tank Destroyer</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 2</p>
+                        <p><strong>Speed:</strong> 1.0</p>
+                        <p><strong>Attack Rate:</strong> 4.0s</p>
+                        <p><strong>Attack Type:</strong> Random selection</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Cut-off Positioning:</strong> Moves to intercept player escape routes</li>
+                            <li><strong>Variable Range:</strong> Adjusts distance based on player position</li>
+                            <li><strong>Group Coordination:</strong> Works with other enemies to trap player</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Burst Projectile:</strong> Fires 2 burst projectiles (Silver Shooter)</li>
+                            <li><strong>Tank Beam:</strong> Medium-duration beam attack (Silver Beam)</li>
+                            <li><strong>Random Selection:</strong> Chooses attack type randomly each cycle</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Has extra health making it more durable. Requires multiple hits to destroy.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-destroyer-blue.svg" alt="Blue Destroyer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Blue Destroyer</h3>
+                        <p>Elite Tank</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 1.3</p>
+                        <p><strong>Attack Rate:</strong> 3.2s</p>
+                        <p><strong>Attack Type:</strong> Random selection</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Strategic Positioning:</strong> Places itself to limit player movement</li>
+                            <li><strong>Area Control:</strong> Uses positioning to control space</li>
+                            <li><strong>Pressure Building:</strong> Multiple destroyers coordinate attacks</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Burst Projectile:</strong> Fires 3 burst projectiles (Blue Shooter)</li>
+                            <li><strong>Elite Beam:</strong> Long-duration beam attack (Blue Beam)</li>
+                            <li><strong>Random Selection:</strong> Chooses attack type randomly each cycle</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Extremely dangerous in groups. Can create impossible situations if not managed.</p>
+                </div>
+            </div>
+
+            <div class="enemy-card">
+                <div class="enemy-header">
+                    <div class="enemy-icon">
+                        <img src="../assets/graphics/enemy-destroyer-pink.svg" alt="Pink Destroyer">
+                    </div>
+                    <div class="enemy-header-content">
+                        <h3>Pink Destroyer</h3>
+                        <p>Master Tank</p>
+                    </div>
+                </div>
+                <div class="enemy-details">
+                    <div class="enemy-stats">
+                        <p><strong>Health:</strong> 1</p>
+                        <p><strong>Speed:</strong> 1.6</p>
+                        <p><strong>Attack Rate:</strong> 2.5s</p>
+                        <p><strong>Attack Type:</strong> Random selection</p>
+                    </div>
+                    <div class="movement-patterns">
+                        <h4>Movement Pattern</h4>
+                        <ul>
+                            <li><strong>Perfect Positioning:</strong> Always finds optimal attack angles</li>
+                            <li><strong>Space Denial:</strong> Systematically eliminates safe areas</li>
+                            <li><strong>Combo Setup:</strong> Coordinates with other enemies for guaranteed hits</li>
+                        </ul>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Burst Projectile:</strong> Fires 5 burst projectiles (Pink Shooter)</li>
+                            <li><strong>Master Beam:</strong> Extended-duration beam attack (Pink Beam)</li>
+                            <li><strong>Random Selection:</strong> Chooses attack type randomly each cycle</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="special-notes">
+                    <h4>Special Notes</h4>
+                    <p>Ultimate dual-attack threat. Requires immediate attention and elimination.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projectile Types Section -->
+    <div class="section">
+        <h2>Enemy Projectiles</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Projectile Types</h3>
+                <p>Enemies use specialized projectile types with unique behaviors:</p>
+
+                <div class="projectile-grid">
+                    <div class="projectile-card">
+                        <div class="projectile-icon">
+                            <img src="../assets/graphics/projectile-burst.svg" alt="Burst">
+                        </div>
+                        <div>
+                            <h4>Burst Projectile</h4>
+                            <p>Fast projectile that explodes into multiple fragments. Used by Shooter enemies and
+                                Destroyers.</p>
+                            <p><strong>Color Variants:</strong></p>
+                            <ul>
+                                <li><strong>Teal:</strong> 1 projectile</li>
+                                <li><strong>Silver:</strong> 2 projectiles</li>
+                                <li><strong>Blue:</strong> 3 projectiles</li>
+                                <li><strong>Pink:</strong> 5 projectiles</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="projectile-card">
+                        <div class="projectile-icon">
+                            <div class="beam-icon">
+                                <i class="fas fa-wave-square"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Beam Attack</h4>
+                            <p>Continuous energy beam that requires line of sight. Used by Beam Shooter enemies and
+                                Destroyers.</p>
+                            <p><strong>Color Variants:</strong></p>
+                            <ul>
+                                <li><strong>Teal:</strong> Short duration, slow tracking</li>
+                                <li><strong>Silver:</strong> Medium duration, improved tracking</li>
+                                <li><strong>Blue:</strong> Long duration, predictive tracking</li>
+                                <li><strong>Pink:</strong> Extended duration, perfect tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Enemy Progression Section -->
+    <div class="section">
+        <h2>Enemy Progression</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Level-based Unlocks</h3>
+                <p>Enemies are introduced progressively as the player advances through levels:</p>
+
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Level Range</th>
+                            <th>Available Enemies</th>
+                            <th>Special Features</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1-4</td>
+                            <td>Shooter (Teal)</td>
+                            <td>Basic enemies only</td>
+                        </tr>
+                        <tr>
+                            <td>5-9</td>
+                            <td>Shooter (Teal, Silver)</td>
+                            <td>Tank variants introduced</td>
+                        </tr>
+                        <tr>
+                            <td>10-14</td>
+                            <td>Shooter (All), Beam Shooter (Teal)</td>
+                            <td>Beam enemies added</td>
+                        </tr>
+                        <tr>
+                            <td>15-19</td>
+                            <td>Shooter, Beam Shooter (All), Rammer (Teal)</td>
+                            <td>Rammer enemies added</td>
+                        </tr>
+                        <tr>
+                            <td>20-24</td>
+                            <td>All categories, Destroyer (Teal)</td>
+                            <td>Destroyer enemies added</td>
+                        </tr>
+                        <tr>
+                            <td>25+</td>
+                            <td>All enemy types and colors</td>
+                            <td>Full enemy roster</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="spec-item">
+                <h3>Difficulty Scaling</h3>
+                <p>Enemy stats scale with level progression:</p>
+                <ul class="feature-list">
+                    <li><strong>Health Increase:</strong> +0.5% per level (max +50%)</li>
+                    <li><strong>Speed Increase:</strong> +0.3% per level (max +30%)</li>
+                    <li><strong>Fire Rate Increase:</strong> -0.2% per level (max -20% cooldown)</li>
+                    <li><strong>Spawn Rate:</strong> Increases with level (base 2s, min 0.5s)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Star Eater Game Documentation</p>
+        <p class="timestamp">Enemies System - Last updated: 2024</p>
+    </footer>
+</body>
+
+</html>

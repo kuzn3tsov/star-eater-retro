@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bosses System - Star Eater Documentation</title>
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <header>
+        <h1>Bosses System</h1>
+        <p class="subtitle">Boss encounters, patterns, and progression</p>
+    </header>
+
+    <div class="floating-nav">
+        <a href="./game-specification.html" class="floating-btn" title="Main Documentation">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="floating-btn top" title="Back to Top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <div class="section">
+        <h2>Boss Overview</h2>
+        <p>Bosses are major encounters that appear every 15 levels, each with unique mechanics, attack patterns, and
+            unlockable rewards.</p>
+
+        <div class="bosses-grid">
+            <div class="boss-card">
+                <div class="boss-header">
+                    <div class="boss-icon">
+                        <img src="../assets/graphics/boss-meteor-commander.svg" alt="Meteor Commander"
+                            style="transform: rotate(-90deg);">
+                    </div>
+                    <div class="boss-header-content">
+                        <h3>Meteor Commander</h3>
+                        <p>Level 15 Boss</p>
+                    </div>
+                </div>
+                <div class="boss-details">
+                    <div class="boss-stats">
+                        <p><strong>Health:</strong> 30</p>
+                        <p><strong>Unlocks:</strong> Endless Mode</p>
+                        <p><strong>Difficulty:</strong> ★★★★★★★</p>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Meteor Shower:</strong> Calls down large meteor projectiles</li>
+                            <li><strong>Orbital Strike:</strong> Targeted laser from orbit</li>
+                            <li><strong>Gravity Crush:</strong> Screen compression attack</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="weakness">
+                    <h4>Weakness</h4>
+                    <p>Bridge exposed after orbital strike</p>
+                </div>
+            </div>
+
+            <div class="boss-card">
+                <div class="boss-header">
+                    <div class="boss-icon">
+                        <img src="../assets/graphics/boss-skull-reaper.svg" alt="Skull Reaper"
+                            style="transform: rotate(-90deg);">
+                    </div>
+                    <div class="boss-header-content">
+                        <h3>Skull Reaper</h3>
+                        <p>Level 30 Boss</p>
+                    </div>
+                </div>
+                <div class="boss-details">
+                    <div class="boss-stats">
+                        <p><strong>Health:</strong> 10</p>
+                        <p><strong>Unlocks:</strong> Radar Power-up</p>
+                        <p><strong>Difficulty:</strong> ★★★☆☆</p>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Skull Barrage:</strong> Fires 8 skull projectiles in circle pattern</li>
+                            <li><strong>Reaper Sweep:</strong> Horizontal beam attack across screen</li>
+                            <li><strong>Death Spiral:</strong> Spinning projectile pattern</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="weakness">
+                    <h4>Weakness</h4>
+                    <p>Vulnerable during beam attack cooldown</p>
+                </div>
+            </div>
+
+            <div class="boss-card">
+                <div class="boss-header">
+                    <div class="boss-icon">
+                        <img src="../assets/graphics/boss-the-machine.svg" alt="The Machine"
+                            style="transform: rotate(-90deg);">
+                    </div>
+                    <div class="boss-header-content">
+                        <h3>The Machine</h3>
+                        <p>Level 45 Boss</p>
+                    </div>
+                </div>
+                <div class="boss-details">
+                    <div class="boss-stats">
+                        <p><strong>Health:</strong> 15</p>
+                        <p><strong>Unlocks:</strong> Shield Power-up</p>
+                        <p><strong>Difficulty:</strong> ★★★★☆</p>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Laser Grid:</strong> Creates laser grid that damages on contact</li>
+                            <li><strong>Missile Barrage:</strong> Fires homing missiles</li>
+                            <li><strong>Overload Pulse:</strong> Screen-wide energy pulse</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="weakness">
+                    <h4>Weakness</h4>
+                    <p>Core exposed after overload pulse</p>
+                </div>
+            </div>
+
+            <div class="boss-card">
+                <div class="boss-header">
+                    <div class="boss-icon">
+                        <img src="../assets/graphics/boss-biohazard-titan.svg" alt="Biohazard Titan"
+                            style="transform: rotate(-90deg);">
+                    </div>
+                    <div class="boss-header-content">
+                        <h3>Biohazard Titan</h3>
+                        <p>Level 60 Boss</p>
+                    </div>
+                </div>
+                <div class="boss-details">
+                    <div class="boss-stats">
+                        <p><strong>Health:</strong> 25</p>
+                        <p><strong>Unlocks:</strong> Extended Power</p>
+                        <p><strong>Difficulty:</strong> ★★★★★★</p>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Toxic Cloud:</strong> Releases damaging poison clouds</li>
+                            <li><strong>Spore Burst:</strong> Explosive spore projectiles</li>
+                            <li><strong>Acid Rain:</strong> Screen-wide acid droplet attack</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="weakness">
+                    <h4>Weakness</h4>
+                    <p>Heart core exposed during spore burst</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Boss Section -->
+    <div class="section mega-boss-section">
+        <h2>Mega Boss</h2>
+        <p class="mega-boss-subtitle">The ultimate challenge that appears after completing all regular bosses</p>
+
+        <div class="bosses-grid">
+            <div class="boss-card mega-boss-card">
+                <div class="boss-header">
+                    <div class="boss-icon mega-boss-icon">
+                        <img src="../assets/graphics/boss-cosmic-horror.svg" alt="Cosmic Horror"
+                            style="transform: rotate(-90deg);">
+                    </div>
+                    <div class="boss-header-content">
+                        <h3>Cosmic Horror</h3>
+                        <p>Level 75 Mega Boss</p>
+                    </div>
+                </div>
+                <div class="boss-details">
+                    <div class="boss-stats">
+                        <p><strong>Health:</strong> 50</p>
+                        <p><strong>Unlocks:</strong> Ultimate Achievement</p>
+                        <p><strong>Difficulty:</strong> ★★★★★★★★★★</p>
+                    </div>
+                    <div class="attack-patterns">
+                        <h4>Attack Patterns</h4>
+                        <ul>
+                            <li><strong>Tentacle Whip:</strong> Fast tentacle attacks from edges</li>
+                            <li><strong>Black Hole:</strong> Creates gravity wells that pull player</li>
+                            <li><strong>Cosmic Ray:</strong> Tracking beam attack</li>
+                            <li><strong>Reality Warp:</strong> Distorts screen and controls</li>
+                            <li><strong>Void Blast:</strong> Massive area-of-effect explosion</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="weakness">
+                    <h4>Weakness</h4>
+                    <p>Multiple eye weak points during black hole creation. Requires perfect timing and positioning.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Boss Battle Mechanics</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Phase System</h3>
+                <p>Each boss has multiple phases that change their behavior and attack patterns:</p>
+                <ul class="feature-list">
+                    <li><strong>Phase 1 (100-66% Health):</strong> Basic attack patterns, slower tempo</li>
+                    <li><strong>Phase 2 (66-33% Health):</strong> Enhanced patterns, additional attacks</li>
+                    <li><strong>Phase 3 (33-0% Health):</strong> Maximum aggression, combined patterns</li>
+                    <li><strong>Enrage Timer:</strong> Bosses enrage if battle lasts too long</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Damage Mechanics</h3>
+                <ul class="feature-list">
+                    <li><strong>Azure Bombs:</strong> Primary damage source (1 damage per bomb)</li>
+                    <li><strong>Player Contact:</strong> No damage (player takes damage instead)</li>
+                    <li><strong>Power-ups:</strong> Ion Pulse deals 1 damage to bosses</li>
+                    <li><strong>Weak Points:</strong> Some bosses have vulnerable spots for double damage</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Boss Level Modifications</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Gameplay Changes</h3>
+                <p>Boss levels feature significant gameplay modifications:</p>
+                <ul class="feature-list">
+                    <li><strong>Radar Auto-activation:</strong> Radar is automatically activated for the entire fight
+                    </li>
+                    <li><strong>Azure Bomb Priority:</strong> Azure bombs have 40% spawn weight</li>
+                    <li><strong>Enemy Spawning:</strong> Regular enemies continue to spawn during boss fights</li>
+                    <li><strong>Collectable Adjustment:</strong> Non-boss collectables have reduced spawn rates</li>
+                </ul>
+            </div>
+
+            <div class="spec-item">
+                <h3>Visual Changes</h3>
+                <ul class="feature-list">
+                    <li><strong>Boss Health Bar:</strong> Displayed at top of screen</li>
+                    <li><strong>Phase Indicators:</strong> Visual and audio cues for phase transitions</li>
+                    <li><strong>Attack Warnings:</strong> Visual indicators for incoming attacks</li>
+                    <li><strong>Background Effects:</strong> Unique background for each boss</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Boss Projectiles</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Projectile Types</h3>
+                <p>Bosses use specialized projectile types with unique behaviors:</p>
+
+                <div class="projectile-grid">
+                    <div class="projectile-card">
+                        <div class="projectile-icon">
+                            <img src="../assets/graphics/projectile-meteor.svg" alt="Meteor"
+                                style="transform: rotate(-90deg);">
+                        </div>
+                        <div>
+                            <h4>Meteor</h4>
+                            <p>Large, slow-moving projectile with area damage</p>
+                        </div>
+                    </div>
+                    <div class="projectile-card">
+                        <div class="projectile-icon">
+                            <img src="../assets/graphics/projectile-big-meteor.svg" alt="Big Meteor"
+                                style="transform: rotate(-90deg);">
+                        </div>
+                        <div>
+                            <h4>Big Meteor</h4>
+                            <p>Massive projectile that breaks into smaller meteors</p>
+                        </div>
+                    </div>
+                    <div class="projectile-card">
+                        <div class="projectile-icon">
+                            <img src="../assets/graphics/projectile-burst.svg" alt="Burst"
+                                style="transform: rotate(-90deg);">
+                        </div>
+                        <div>
+                            <h4>Burst</h4>
+                            <p>Fast projectile that explodes into multiple fragments</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Technical Implementation</h2>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                    <th>Key Methods</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>BossManager</td>
+                    <td>Main boss controller and spawner</td>
+                    <td>spawnBoss(), updateBoss(), checkBossDefeated()</td>
+                </tr>
+                <tr>
+                    <td>Boss Classes</td>
+                    <td>Individual boss behavior implementations</td>
+                    <td>update(), attack(), takeDamage(), changePhase()</td>
+                </tr>
+                <tr>
+                    <td>Phase System</td>
+                    <td>Boss phase transitions and pattern changes</td>
+                    <td>checkPhaseChange(), activatePhase()</td>
+                </tr>
+                <tr>
+                    <td>Attack Patterns</td>
+                    <td>Boss attack sequence management</td>
+                    <td>executeAttackPattern(), startAttackCooldown()</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Endless Mode Bosses</h2>
+        <div class="spec-details">
+            <div class="spec-item">
+                <h3>Endless Boss Behavior</h3>
+                <p>In Endless Mode, bosses can appear as regular enemies with modified behavior:</p>
+                <ul class="feature-list">
+                    <li><strong>Mini-Bosses:</strong> Scaled-down versions of main bosses</li>
+                    <li><strong>Health Scaling:</strong> Reduced health but faster attack patterns</li>
+                    <li><strong>Random Selection:</strong> Any boss can appear after level 100</li>
+                    <li><strong>Multiple Bosses:</strong> Chance for multiple mini-bosses simultaneously</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Star Eater Game Documentation</p>
+        <p class="timestamp">Bosses System - Last updated: 2024</p>
+    </footer>
+</body>
+
+</html>

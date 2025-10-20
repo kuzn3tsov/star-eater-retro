@@ -6,6 +6,8 @@ import { ProjectileManager } from './projectiles.js';
 import { ParticleManager } from './particles.js';
 import { UIManager } from './ui.js';
 import { BossManager } from './bosses.js';
+import { CollisionManager } from './physics/collision-manager.js';
+import { PowerUpStateManager } from './managers/power-up-state-manager.js';
 
 export class GameEngine {
     constructor() {
@@ -27,7 +29,7 @@ export class GameEngine {
 
         this.score = 0;
         this.highScore = 0;
-        this.level = 1;
+        this.config = null;
         this.lives = 3;
         this.playerName = 'PLAYER';
 
@@ -38,6 +40,16 @@ export class GameEngine {
 
         this.highScores = [];
         this.keys = {};
+
+        // Sound state - start with sound ON
+        this.soundEnabled = true;
+
+        // Boss fight coordination
+        this.bossFightInProgress = false;
+
+        // Initialize power-up state manager
+        this.powerUpStateManager = new PowerUpStateManager();
+
         this.setupInputHandling();
     }
 
@@ -75,19 +87,32 @@ export class GameEngine {
     }
 
     async initialize() {
+        await this.loadConfiguration();
+
         this.setupCanvas();
-        this.loadHighScores();
+        await this.loadHighScores();
         this.setupEventListeners();
         await this.waitForGameContainer();
 
+        this.lives = this.config.player.startingLives;
+        this.level = this.config.player.startingLevel;
+        this.starsRequired = this.config.gameProgression.starsPerLevel;
+
+        console.log('Initializing game managers...');
+
+        // Initialize managers
         this.particles = new ParticleManager(this);
         this.projectiles = new ProjectileManager(this);
-        this.powerups = new PowerUpManager(this);
-        this.collectibles = new CollectibleManager(this);
-        this.enemies = new EnemyManager(this);
-        this.boss = new BossManager(this);
+        this.powerups = new PowerUpManager(this, this.config, this.powerUpStateManager);
+        this.collectibles = new CollectibleManager(this, this.config);
+        this.enemies = new EnemyManager(this, this.config);
+        this.boss = new BossManager(this, this.config);
         this.player = new Player(this);
-        this.ui = new UIManager(this);
+
+        // Initialize UI
+        console.log('Creating UIManager...');
+        this.ui = new UIManager(this, this.powerUpStateManager);
+        console.log('UIManager created:', this.ui);
 
         await Promise.allSettled([
             this.enemies.initialize(),
@@ -95,11 +120,163 @@ export class GameEngine {
             this.collectibles.initialize()
         ]);
 
-        await this.ui.initialize();
+        console.log('Calling UI initialize...');
 
-        console.log('Game initialized with all managers');
+        // Initialize UI with error handling
+        if (this.ui && typeof this.ui.initialize === 'function') {
+            await this.ui.initialize();
+            console.log('UI initialized successfully');
+        } else {
+            console.error('UIManager initialize method not found!', this.ui);
+            // Create fallback UI object
+            this.ui = {
+                update: () => this.updateHUD(),
+                updateHUD: () => this.updateHUD(),
+                updatePowerUpState: () => { },
+                syncPowerUpStates: () => { }
+            };
+        }
+
+        // Initialize sound icons after UI is ready
+        this.initializeSoundIcons();
+
+        console.log('Game initialized with configuration');
         this.showIntroModal();
         this.gameLoop();
+    }
+
+    async loadConfiguration() {
+        try {
+            const response = await fetch('data/config.json');
+            if (response.ok) {
+                this.config = await response.json();
+                console.log('Game configuration loaded successfully');
+            } else {
+                throw new Error('Failed to load config file');
+            }
+        } catch (error) {
+            console.error('Error loading configuration, using defaults:', error);
+            this.config = {
+                player: { startingLives: 3, startingLevel: 1 },
+                collectables: {
+                    goldStar: { spawnStartLevel: 1, maxSpawned: 5, spawnFrequency: 1, duration: 10 },
+                    greenStar: { spawnStartLevel: 4, maxSpawned: 5, spawnFrequency: 1, duration: 8, freezeDuration: 3 },
+                    blueStar: { spawnStartLevel: 6, maxSpawned: 5, spawnFrequency: 5, duration: 10, starPowerDuration: 10 },
+                    purpleStar: { spawnStartLevel: 1, maxSpawned: 1, spawnFrequency: 1, duration: 6 },
+                    redRocket: { spawnStartLevel: 13, maxSpawned: 2, spawnFrequency: 3, duration: 12 },
+                    azureBomb: { spawnStartLevel: 15, maxSpawned: 3, spawnFrequency: 1, duration: 8 }
+                },
+                powerups: {
+                    shield: { availableFromLevel: 1, rechargeTime: 30, duration: 10, freezeDuration: 2 },
+                    ionPulse: { availableFromLevel: 1, rechargeTime: 25, damage: 1, radius: 225 },
+                    radar: { availableFromLevel: 1, rechargeTime: 45, bombWarningTime: 3, duration: 5 },
+                    starPower: { availableFromLevel: 1, duration: 10 }
+                },
+                extendedPower: {
+                    radarBoost: { bombWarningTime: 5 },
+                    shieldBoost: { duration: 15, freezeDuration: 3, cooldown: 25 },
+                    ionPulseBoost: { cooldown: 20, damage: 2, radius: 300 }
+                },
+                enemies: {
+                    respawnCooldown: 30,
+                    levelPattern: [3, 6, 10, 3, 6, 10, 3, 4, 6, 10],
+                    bossLevels: [15, 30, 45, 60, 75]
+                },
+                gameProgression: {
+                    starsPerLevel: 10,
+                    maxLevel: 75
+                },
+                bosses: {
+                    meteorCommander: { level: 15, health: 20, attackCooldown: 2.0, reward: "radar" },
+                    skullReaper: { level: 30, health: 50, attackCooldown: 1.8, reward: "shield" },
+                    theMachine: { level: 45, health: 100, attackCooldown: 1.5, reward: "ionPulse" },
+                    biohazardTitan: { level: 60, health: 200, attackCooldown: 1.2, reward: "extendedPower" },
+                    cosmicHorror: { level: 75, health: 500, attackCooldown: 0.8, reward: "endlessMode" }
+                }
+            };
+        }
+    }
+
+    async loadHighScores() {
+        try {
+            const saved = localStorage.getItem('stareater_highscores');
+            if (saved) {
+                const parsedScores = JSON.parse(saved);
+                if (Array.isArray(parsedScores)) {
+                    this.highScores = parsedScores;
+                    console.log('High scores loaded from localStorage:', this.highScores.length);
+                } else {
+                    console.warn('Invalid high scores data in localStorage, using defaults');
+                    this.highScores = this.getDefaultHighScores();
+                    this.saveHighScoresToLocalStorage();
+                }
+            } else {
+                try {
+                    const response = await fetch('data/high-scores.json');
+                    if (response.ok) {
+                        const scoresData = await response.json();
+                        this.highScores = Array.isArray(scoresData.highScores) ? scoresData.highScores : [];
+                        console.log('High scores loaded from JSON file:', this.highScores.length);
+                        this.saveHighScoresToLocalStorage();
+                    } else {
+                        throw new Error('Failed to load high scores file');
+                    }
+                } catch (fileError) {
+                    console.warn('Could not load high scores from file, using defaults:', fileError);
+                    this.highScores = this.getDefaultHighScores();
+                    this.saveHighScoresToLocalStorage();
+                }
+            }
+
+            this.validateHighScores();
+
+        } catch (error) {
+            console.error('Error loading high scores:', error);
+            this.highScores = this.getDefaultHighScores();
+            this.saveHighScoresToLocalStorage();
+        }
+
+        this.safeUpdateHUD();
+    }
+
+    validateHighScores() {
+        if (!Array.isArray(this.highScores)) {
+            console.warn('High scores was not an array, resetting to defaults');
+            this.highScores = this.getDefaultHighScores();
+            return;
+        }
+
+        this.highScores = this.highScores.filter(score =>
+            score &&
+            typeof score === 'object' &&
+            typeof score.name === 'string' &&
+            typeof score.score === 'number' &&
+            score.score >= 0
+        ).map(score => ({
+            name: score.name || 'UNKNOWN',
+            score: Number(score.score) || 0,
+            date: score.date || new Date().toISOString()
+        }));
+
+        this.highScores.sort((a, b) => b.score - a.score);
+        this.highScores = this.highScores.slice(0, 10);
+    }
+
+    getDefaultHighScores() {
+        return [
+            { name: 'ACE', score: 10000, date: new Date('2024-01-01').toISOString() },
+            { name: 'PRO', score: 7500, date: new Date('2024-01-01').toISOString() },
+            { name: 'NEW', score: 5000, date: new Date('2024-01-01').toISOString() },
+            { name: 'ROOKIE', score: 2500, date: new Date('2024-01-01').toISOString() }
+        ];
+    }
+
+    saveHighScoresToLocalStorage() {
+        try {
+            localStorage.setItem('stareater_highscores', JSON.stringify(this.highScores));
+        } catch (error) {
+            console.error('Error saving high scores to localStorage:', error);
+        }
     }
 
     waitForGameContainer() {
@@ -205,25 +382,35 @@ export class GameEngine {
         }
     }
 
+    initializeSoundIcons() {
+        const soundOn = document.getElementById('sound-on-icon');
+        const soundOff = document.getElementById('sound-off-icon');
+
+        if (soundOn && soundOff) {
+            if (this.soundEnabled) {
+                soundOn.classList.remove('hidden');
+                soundOff.classList.add('hidden');
+            } else {
+                soundOn.classList.add('hidden');
+                soundOff.classList.remove('hidden');
+            }
+        }
+    }
+
     startGame() {
         this.hideModal('intro-modal');
         this.gameState = 'playing';
         this.score = 0;
-        this.lives = 3;
-        this.level = 1;
+        this.lives = this.config.player.startingLives;
+        this.level = this.config.player.startingLevel;
         this.starsCollected = 0;
-        this.starsRequired = 10;
+        this.starsRequired = this.config.gameProgression.starsPerLevel;
         this.resetGame();
         this.updateHUD();
         this.clearCanvas();
         if (this.enemies) this.enemies.spawnEnemies();
 
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
-        if (playIcon && pauseIcon) {
-            playIcon.classList.add('hidden');
-            pauseIcon.classList.remove('hidden');
-        }
+        this.updatePlayPauseIcons(false);
     }
 
     restartGame() {
@@ -231,22 +418,17 @@ export class GameEngine {
         this.hideAllModals();
         this.gameState = 'playing';
         this.score = 0;
-        this.lives = 3;
-        this.level = 1;
+        this.lives = this.config.player.startingLives;
+        this.level = this.config.player.startingLevel;
         this.starsCollected = 0;
-        this.starsRequired = 10;
+        this.starsRequired = this.config.gameProgression.starsPerLevel;
         this.resetGame();
         this.clearCanvas();
         this.updateHUD();
         this.resetPowerUpIcons();
         if (this.enemies) this.enemies.spawnEnemies();
 
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
-        if (playIcon && pauseIcon) {
-            playIcon.classList.add('hidden');
-            pauseIcon.classList.remove('hidden');
-        }
+        this.updatePlayPauseIcons(false);
     }
 
     resetGame() {
@@ -258,8 +440,15 @@ export class GameEngine {
         if (this.particles) this.particles.clear();
         if (this.boss) this.boss.clear();
 
-        this.toxicClouds = [];
+        // Reset boss fight state
+        this.bossFightInProgress = false;
 
+        // Clear power-up states
+        if (this.powerUpStateManager) {
+            this.powerUpStateManager.clear();
+        }
+
+        this.toxicClouds = [];
         this.clearGameContainer();
     }
 
@@ -296,6 +485,7 @@ export class GameEngine {
         }
 
         if (this.enemies) this.enemies.spawnEnemies();
+        this.updatePlayPauseIcons(false);
     }
 
     gameLoop(currentTime = 0) {
@@ -309,6 +499,11 @@ export class GameEngine {
     update() {
         if (this.gameState !== 'playing') return;
 
+        // Update power-up cooldowns
+        if (this.powerUpStateManager) {
+            this.powerUpStateManager.updateCooldowns(this.deltaTime);
+        }
+
         this.updatePlayerInput();
         if (this.player) this.player.update(this.deltaTime);
         if (this.enemies) this.enemies.update(this.deltaTime);
@@ -318,6 +513,16 @@ export class GameEngine {
         if (this.particles) this.particles.update(this.deltaTime);
         if (this.boss) this.boss.update(this.deltaTime);
         if (this.ui) this.ui.update(this.deltaTime);
+
+        // Sync star power state with UI when time is running out
+        if (this.player && this.player.starPowerTime > 0 && this.player.starPowerTime < 0.1) {
+            if (this.ui && this.ui.updatePowerUpState) {
+                this.ui.updatePowerUpState('starPower', {
+                    active: false,
+                    duration: 0
+                });
+            }
+        }
 
         this.checkCollisions();
         this.checkToxicCloudCollisions();
@@ -345,7 +550,7 @@ export class GameEngine {
         if (!this.player || !this.enemies) return;
 
         this.enemies.getEnemies().forEach((enemy, index) => {
-            if (this.checkRectCollision(this.player.bounds, enemy)) {
+            if (CollisionManager.checkRectCollision(this.player.bounds, enemy)) {
                 if (this.powerups && this.powerups.isShieldActive()) {
                     this.powerups.freezeEnemy(enemy, 2);
                     this.addScore(1);
@@ -379,7 +584,7 @@ export class GameEngine {
         }
 
         if (this.boss && this.boss.currentBoss && this.boss.bossActive) {
-            if (this.checkRectCollision(this.player.bounds, this.boss.currentBoss)) {
+            if (CollisionManager.checkRectCollision(this.player.bounds, this.boss.currentBoss)) {
                 if (!this.player.takeDamage()) {
                     this.lives--;
                     this.updateHUD();
@@ -400,7 +605,7 @@ export class GameEngine {
         for (let i = this.toxicClouds.length - 1; i >= 0; i--) {
             const cloud = this.toxicClouds[i];
 
-            if (this.checkRectCollision(playerBounds, cloud)) {
+            if (CollisionManager.checkRectCollision(playerBounds, cloud)) {
                 if (!cloud.lastDamageTime || now - cloud.lastDamageTime > 1000) {
                     if (!this.player.takeDamage()) {
                         this.lives--;
@@ -420,13 +625,6 @@ export class GameEngine {
         }
     }
 
-    checkRectCollision(rect1, rect2) {
-        return rect1.x < rect2.x + rect2.width &&
-            rect1.x + rect1.width > rect2.x &&
-            rect1.y < rect2.y + rect2.height &&
-            rect1.y + rect1.height > rect2.y;
-    }
-
     checkLevelProgression() {
         if (this.starsCollected >= this.starsRequired && this.gameState === 'playing') {
             this.levelComplete();
@@ -434,12 +632,21 @@ export class GameEngine {
     }
 
     levelComplete() {
+        // Prevent multiple level completions
+        if (this.bossFightInProgress) return;
+
         this.level++;
         this.starsCollected = 0;
         this.updateHUD();
 
         if (this.level === 60) {
-            if (this.powerups) this.powerups.unlockExtendedPower();
+            if (this.powerups) {
+                this.powerups.unlockExtendedPower();
+            }
+        }
+
+        if (this.powerups) {
+            this.powerups.checkPowerUpAvailability();
         }
 
         if (this.particles) {
@@ -451,19 +658,13 @@ export class GameEngine {
             );
         }
 
-        // Clear current level
-        if (this.enemies) this.enemies.clear();
-        if (this.collectibles) this.collectibles.clear();
-
-        // Handle boss levels
-        if ([15, 30, 45, 60, 75].includes(this.level)) {
+        if (this.config.enemies.bossLevels.includes(this.level)) {
             setTimeout(() => {
                 if (this.gameState === 'playing' && this.boss) {
                     this.startBossFight(this.level);
                 }
             }, 1500);
         } else {
-            // Regular level - spawn enemies after delay
             setTimeout(() => {
                 if (this.gameState === 'playing' && this.enemies) {
                     this.enemies.spawnEnemies();
@@ -473,9 +674,21 @@ export class GameEngine {
     }
 
     startBossFight(level) {
+        // Prevent multiple boss fight initializations
+        if (this.bossFightInProgress) return;
+
+        this.bossFightInProgress = true;
+
         if (this.boss) {
             this.boss.spawnBoss(level);
+
+            // Single coordinated radar activation
+            const bossLevelsWithRadar = [30, 45, 60, 75];
+            if (bossLevelsWithRadar.includes(level) && this.powerups) {
+                this.powerups.activateBossRadar();
+            }
         }
+
         if (this.particles) {
             this.particles.createTextEffect(
                 this.canvas.width / 2,
@@ -484,6 +697,7 @@ export class GameEngine {
                 '#ff4444'
             );
         }
+
         if (this.enemies) this.enemies.clear();
         console.log(`Starting boss fight for level ${level}`);
     }
@@ -563,46 +777,55 @@ export class GameEngine {
         }
     }
 
-    updateHUD() {
-        const scoreElement = document.getElementById('score');
-        if (scoreElement) {
-            scoreElement.textContent = this.score.toString().padStart(5, '0');
-        }
-
-        const highScoreElement = document.getElementById('high-score');
-        if (highScoreElement) {
-            const topScore = this.getTopScore();
-            if (topScore) {
-                highScoreElement.textContent = `${topScore.score.toString().padStart(5, '0')} ${topScore.name}`;
-            } else {
-                highScoreElement.textContent = '00000';
+    safeUpdateHUD() {
+        try {
+            const scoreElement = document.getElementById('score');
+            if (scoreElement) {
+                scoreElement.textContent = this.score.toString().padStart(5, '0');
             }
-        }
 
-        const levelElement = document.getElementById('level');
-        if (levelElement) {
-            levelElement.textContent = this.level.toString().padStart(2, '0');
-        }
+            const highScoreElement = document.getElementById('high-score');
+            if (highScoreElement) {
+                const topScore = this.getTopScore();
+                if (topScore && typeof topScore.score === 'number') {
+                    highScoreElement.textContent = `${topScore.score.toString().padStart(5, '0')} ${topScore.name || 'UNKNOWN'}`;
+                } else {
+                    highScoreElement.textContent = '00000';
+                }
+            }
 
-        const livesElement = document.getElementById('lives');
-        if (livesElement) {
-            livesElement.textContent = this.lives.toString();
-        }
+            const levelElement = document.getElementById('level');
+            if (levelElement) {
+                levelElement.textContent = (this.level || 1).toString().padStart(2, '0');
+            }
 
-        const starsElement = document.getElementById('stars-progress');
-        if (starsElement) {
-            starsElement.textContent = `${this.starsCollected}/${this.starsRequired}`;
-        }
+            const livesElement = document.getElementById('lives');
+            if (livesElement) {
+                livesElement.textContent = (this.lives || 3).toString();
+            }
 
-        const progressBar = document.getElementById('stars-progress-bar');
-        if (progressBar) {
-            const progressPercent = (this.starsCollected / this.starsRequired) * 100;
-            progressBar.style.width = `${Math.min(progressPercent, 100)}%`;
+            const starsElement = document.getElementById('stars-progress');
+            if (starsElement) {
+                starsElement.textContent = `${this.starsCollected || 0}/${this.starsRequired || 10}`;
+            }
+
+            const progressBar = document.getElementById('stars-progress-bar');
+            if (progressBar) {
+                const progressPercent = ((this.starsCollected || 0) / (this.starsRequired || 10)) * 100;
+                progressBar.style.width = `${Math.min(progressPercent, 100)}%`;
+            }
+        } catch (error) {
+            console.warn('Error in safe HUD update:', error);
         }
+    }
+
+    updateHUD() {
+        this.safeUpdateHUD();
     }
 
     gameOver() {
         this.gameState = 'gameover';
+        this.bossFightInProgress = false;
         this.saveHighScore();
 
         const finalScoreElement = document.getElementById('final-score');
@@ -611,13 +834,7 @@ export class GameEngine {
         }
 
         this.showModal('game-over-modal');
-
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
-        if (playIcon && pauseIcon) {
-            playIcon.classList.remove('hidden');
-            pauseIcon.classList.add('hidden');
-        }
+        this.updatePlayPauseIcons(true);
 
         if (this.particles) {
             this.particles.createExplosion(this.canvas.width / 2, this.canvas.height / 2, '#ff4444', 20);
@@ -626,6 +843,7 @@ export class GameEngine {
 
     victory() {
         this.gameState = 'victory';
+        this.bossFightInProgress = false;
         this.saveHighScore();
 
         const victoryScoreElement = document.getElementById('victory-score');
@@ -634,13 +852,7 @@ export class GameEngine {
         }
 
         this.showModal('victory-modal');
-
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
-        if (playIcon && pauseIcon) {
-            playIcon.classList.remove('hidden');
-            pauseIcon.classList.add('hidden');
-        }
+        this.updatePlayPauseIcons(true);
 
         if (this.particles) {
             for (let i = 0; i < 50; i++) {
@@ -656,46 +868,22 @@ export class GameEngine {
         }
     }
 
-    loadHighScores() {
-        try {
-            const saved = localStorage.getItem('stareater_highscores');
-            if (saved) {
-                this.highScores = JSON.parse(saved);
-            } else {
-                this.highScores = [
-                    { name: 'ACE', score: 10000 },
-                    { name: 'PRO', score: 7500 },
-                    { name: 'NEW', score: 5000 },
-                    { name: 'ROOKIE', score: 2500 }
-                ];
-            }
-            this.updateHUD();
-        } catch (error) {
-            console.error('Error loading high scores:', error);
-            this.highScores = [];
-        }
-    }
-
     saveHighScore() {
         if (this.score > 0) {
-            this.highScores.push({
+            const newScore = {
                 name: this.playerName,
                 score: this.score,
                 date: new Date().toISOString()
-            });
+            };
 
+            this.highScores.push(newScore);
             this.highScores.sort((a, b) => b.score - a.score);
             this.highScores = this.highScores.slice(0, 10);
-
-            try {
-                localStorage.setItem('stareater_highscores', JSON.stringify(this.highScores));
-            } catch (error) {
-                console.error('Error saving high scores:', error);
-            }
+            this.saveHighScoresToLocalStorage();
 
             this.updateHUD();
 
-            if (this.score === this.highScores[0].score && this.particles) {
+            if (this.highScores[0] && this.highScores[0].score === this.score && this.particles) {
                 this.particles.createTextEffect(
                     this.canvas.width / 2,
                     this.canvas.height / 2,
@@ -707,7 +895,14 @@ export class GameEngine {
     }
 
     getTopScore() {
-        return this.highScores.length > 0 ? this.highScores[0] : null;
+        if (this.highScores.length === 0) return null;
+
+        const topScore = this.highScores[0];
+        if (!topScore || typeof topScore.score !== 'number') {
+            return null;
+        }
+
+        return topScore;
     }
 
     screenShake(intensity) {
@@ -770,10 +965,15 @@ export class GameEngine {
             if (index === 0) {
                 item.classList.add('top-score');
             }
+
+            const date = new Date(score.date);
+            const formattedDate = date.toLocaleDateString();
+
             item.innerHTML = `
                 <span class="score-rank">${index + 1}.</span>
-                <span class="score-name">${score.name}</span>
-                <span class="score-value">${score.score.toString().padStart(5, '0')}</span>
+                <span class="score-name">${score.name || 'UNKNOWN'}</span>
+                <span class="score-value">${(score.score || 0).toString().padStart(5, '0')}</span>
+                <span class="score-date">${formattedDate}</span>
             `;
             list.appendChild(item);
         });
@@ -782,17 +982,22 @@ export class GameEngine {
     togglePause() {
         if (this.gameState === 'playing') {
             this.gameState = 'paused';
-            const playIcon = document.getElementById('play-icon');
-            const pauseIcon = document.getElementById('pause-icon');
-            if (playIcon && pauseIcon) {
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-            }
+            this.updatePlayPauseIcons(true);
         } else if (this.gameState === 'paused') {
             this.gameState = 'playing';
-            const playIcon = document.getElementById('play-icon');
-            const pauseIcon = document.getElementById('pause-icon');
-            if (playIcon && pauseIcon) {
+            this.updatePlayPauseIcons(false);
+        }
+    }
+
+    updatePlayPauseIcons(showPlayIcon) {
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        if (playIcon && pauseIcon) {
+            if (showPlayIcon) {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            } else {
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
             }
@@ -802,13 +1007,18 @@ export class GameEngine {
     toggleSound() {
         const soundOn = document.getElementById('sound-on-icon');
         const soundOff = document.getElementById('sound-off-icon');
+
         if (soundOn && soundOff) {
-            if (soundOn.classList.contains('hidden')) {
+            this.soundEnabled = !this.soundEnabled;
+
+            if (this.soundEnabled) {
                 soundOn.classList.remove('hidden');
                 soundOff.classList.add('hidden');
+                console.log('Sound turned ON');
             } else {
                 soundOn.classList.add('hidden');
                 soundOff.classList.remove('hidden');
+                console.log('Sound turned OFF');
             }
         }
     }
