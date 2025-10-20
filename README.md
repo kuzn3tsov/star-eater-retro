@@ -4,10 +4,6 @@ Star Eater retro top-dowv space collect and survive game
 
 to do:
 
-- [ ] Projectiles visuals and logic
-- [ ] Fix bugs
-  - [ ] HUD Powerup icon lit from stat
-  - [ ] HUD Dual control buttons
 - [ ] Sounds
 - [ ] Organizing scripts
 - [ ] Endless Mode after Level 75
@@ -16,6 +12,10 @@ to do:
 
 
 - [ ] Plan:
+  - [ ] add editor for config json
+    - [ ] html
+    - [ ] css
+    - [ ] js
   - [ ] 2-Player Co-op
   - [ ] Online Leaderboards
   - [ ] Daily Challenges
