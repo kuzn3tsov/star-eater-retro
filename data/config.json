@@ -1,7 +1,7 @@
 {
   "player": {
-    "startingLives": 3,
-    "startingLevel": 1
+    "startingLives": 100,
+    "startingLevel": 14
   },
   "collectables": {
     "goldStar": {
@@ -130,4 +130,5 @@
       "reward": "endlessMode"
     }
   }
+
 }
