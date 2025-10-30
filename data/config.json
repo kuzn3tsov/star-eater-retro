@@ -1,7 +1,7 @@
 {
   "player": {
-    "startingLives": 100,
-    "startingLevel": 14
+    "startingLives": 5,
+    "startingLevel": 1
   },
   "collectables": {
     "goldStar": {
@@ -132,3 +132,4 @@
   }
 
 }
+
